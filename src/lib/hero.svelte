@@ -5,7 +5,7 @@
 
   const colors = ['blue', 'red', 'orange', 'tan'];
   const color_els = [];
-  let circles;
+  let circles, play = false;
 
   onMount(() => {
     setTimeout(() => {
@@ -17,6 +17,7 @@
         }, i * 150);
       });
       circles.style.clipPath = 'circle(50% at 50% 50%)';
+      play = true;
     }, 100);
   });
 </script>
@@ -31,10 +32,11 @@
   <div class="hero">
     <div>
       <h1>
-        <Revealer string="Hi, I'm Andrew Russell." />
+        <Revealer {play} string="Hi, I'm Andrew Russell." />
       </h1>
       <h3>
         <Revealer
+          {play}
           string="I'm a computer science student studying at UC San Diego."
           delay={200}
           interval={50}

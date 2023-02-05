@@ -9,9 +9,11 @@
     show = false;
 
   onMount(() => {
-    splitter.style.transition = 'transform 1s';
-    splitter.offsetHeight; // Reflow
-    show = true;
+    setTimeout(() => {
+      splitter.style.transition = 'transform 1s';
+      splitter.offsetHeight; // Reflow
+      show = true;
+    }, 100);
   });
 </script>
 
