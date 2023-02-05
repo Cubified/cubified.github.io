@@ -87,7 +87,7 @@
     display: flex;
     padding: 0 40vw;
   }
-  .projects.mobile .project {
+  .projects.mobile .project:not(:last-child) {
     transition: transform 0.1s;
   }
   .project {
