@@ -14,7 +14,7 @@
     },
     {
       name: 'mode7',
-      img: 'https://github.com/Cubified/mode7/raw/master/demo.gif',
+      img: '/mode7.gif',
       url: 'https://github.com/Cubified/mode7',
       langs: ['JavaScript'],
       desc: 'A pure-Javascript perspective transform (a la SNES Mode 7).'
@@ -253,7 +253,7 @@
     background: var(--color-orange);
   }
   .content .second {
-    background: #344D67;
+    background: #344d67;
   }
   .content .third {
     background: var(--color-red);
