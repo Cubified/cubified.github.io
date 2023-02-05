@@ -10,6 +10,7 @@
   const scroll = (e) => {
     x = Math.ceil(e.target.scrollLeft);
 
+    /*
     if (x + e.target.offsetWidth >= e.target.scrollWidth) {
       x = 1;
       e.target.scrollTo(x, 0);
@@ -17,6 +18,7 @@
       x = e.target.scrollWidth - e.target.offsetWidth - 1;
       e.target.scrollTo(x, 0);
     }
+    */
 
     if (!parent || !els.length) return;
     els.forEach((el) => {
@@ -24,12 +26,10 @@
       el.offsetHeight; // Reflow
 
       const rect = el.getBoundingClientRect();
-      const center = (window.innerWidth / 2);
+      const center = window.innerWidth / 2;
       const val = Math.pow(
-        Math.sin(
-          (Math.PI / 2) * (rect.left + (rect.width / 2)) / center
-        ),
-        2
+        Math.sin(((Math.PI / 2) * (rect.left + rect.width / 2)) / center),
+        window.innerWidth <= 500 ? 1 : 2
       );
       const clamp = Math.max(0.5, Math.min(1, val));
       el.style.transform = `scale(${clamp})`;
@@ -39,21 +39,29 @@
 
   $: if (ready && !fired) {
     setTimeout(() => {
-      if (!parent.parentNode) return;
-
-      parent.parentNode.scrollTo(18 * 16, 0);
+      parent.parentNode.scrollTo(window.innerWidth * 0.3, 0);
       scroll({ target: parent.parentNode });
-      window.addEventListener('resize', () =>
-        scroll({ target: parent.parentNode })
-      );
+      window.addEventListener('resize', () => {
+        if (!parent?.parentNode) return;
+        scroll({ target: parent.parentNode });
+      });
       fired = true;
     }, 700);
+
+    if (parent) {
+      const ua = navigator.userAgent;
+      if (ua.match(/iPad/i) || ua.match(/iPhone/i)) {
+        parent.classList.add('mobile');
+      } else {
+        parent.classList.remove('mobile');
+      }
+    }
   }
 </script>
 
 <div on:scroll={scroll} class="container" style={`opacity: ${fired ? 1 : 0}`}>
-  <div bind:this={parent} class="projects">
-    {#each [...projects, ...projects] as { name, img, langs, desc, url }, i}
+  <div bind:this={parent} class="projects mobile">
+    {#each projects as { name, img, langs, desc, url }, i}
       <div bind:this={els[i]} class="project">
         <div class="image">
           <img src={img} alt={name} />
@@ -74,9 +82,13 @@
     transition: opacity 0.3s;
   }
   .projects {
-    width: 200rem;
+    width: 140rem;
     flex: 1;
     display: flex;
+    padding: 0 40vw;
+  }
+  .projects.mobile .project {
+    transition: transform 0.1s;
   }
   .project {
     width: 30rem;

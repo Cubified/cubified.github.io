@@ -28,11 +28,11 @@
       desc: 'A tiny, frameless, keyboard-driven tiling window manager with multimonitor support.'
     },
     {
-      name: 'ledit.asm',
-      img: 'https://github.com/Cubified/ledit.asm/raw/main/demo.gif',
-      url: 'https://github.com/Cubified/ledit.asm',
-      langs: ['x86 Assembly'],
-      desc: 'A 100% dependency-free terminal line editor.'
+      name: 'lush',
+      img: 'https://github.com/Cubified/lush/raw/main/demo.gif',
+      url: 'https://github.com/Cubified/lush',
+      langs: ['x86 Assembly', 'C'],
+      desc: 'A tiny UNIX shell. Supports syntax highlighting and command ghosting/onion skin by default, built on top of a custom line editor written in Assembly.'
     },
     {
       name: 'Make-A-Wish Volunteer Hub',
@@ -48,6 +48,27 @@
       url: 'https://github.com/Cubified/bdfedit',
       langs: ['C'],
       desc: 'A terminal-based, mouse-driven BDF (bitmap) font editor.'
+    },
+    {
+      name: 'term',
+      img: 'https://github.com/Cubified/term/raw/main/demo.gif',
+      url: 'https://github.com/Cubified/term',
+      langs: ['C'],
+      desc: 'A tiny VT-100 terminal emulator for Linux, built with Unicode and Truecolor support.'
+    },
+    {
+      name: 'React Simple Scheduler',
+      img: 'https://github.com/cubified/react-simple-scheduler/raw/main/demo/demo.png',
+      url: 'https://github.com/Cubified/react-simple-scheduler',
+      langs: ['TypeScript', 'React', 'SASS'],
+      desc: 'Simple, extensible scheduler and calendar components for React, modeled after Google Calendar.'
+    },
+    {
+      name: 'Softbody',
+      img: 'https://github.com/Cubified/softbody/raw/main/demo.png',
+      url: 'https://github.com/Cubified/softbody',
+      langs: ['JavaScript'],
+      desc: 'A simple soft body physics simulation for n-sided polygons.'
     }
   ];
 
@@ -83,7 +104,8 @@
             <Revealer play={play[0]} string="About Me" delay={300} />
           </h2>
           <p>
-            I am a computer science student at UC San Diego, interested in <b
+            I am an undergraduate computer science student at UC San Diego,
+            interested in <b
               >graphics, embedded systems, and full-stack web development</b
             >. I have 7 years of self-taught programming experience working with
             <b>C and JavaScript</b>, and am also comfortable working with
@@ -110,8 +132,8 @@
             <br />
 
             I am also an <b>Engineering Manager</b> with
-            <a href="https://tse.ucsd.edu">Triton Software Engineering</a> at UCSD,
-            responsible for leading 8 developers in implementing a landing
+            <a href="https://tse.ucsd.edu">Triton Software Engineering</a> at
+            UCSD, responsible for leading 8 developers in implementing a landing
             page for Los Angeles-based non-profit
             <a href="https://fixnation.org">FixNation</a>.
           </p>
