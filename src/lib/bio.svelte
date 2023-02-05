@@ -1,5 +1,6 @@
 <script>
   import { tick } from 'svelte';
+  import { base } from '$app/paths';
   import Revealer from '$lib/revealer.svelte';
   import Observer from '$lib/observer.svelte';
   import Projects from '$lib/projects.svelte';
@@ -14,7 +15,7 @@
     },
     {
       name: 'mode7',
-      img: '/mode7.gif',
+      img: `${base}/mode7.gif`,
       url: 'https://github.com/Cubified/mode7',
       langs: ['JavaScript'],
       desc: 'A pure-Javascript perspective transform (a la SNES Mode 7).'
@@ -35,7 +36,7 @@
     },
     {
       name: 'Make-A-Wish Volunteer Hub',
-      img: '/maw.png',
+      img: `${base}/maw.png`,
       url: 'https://github.com/TritonSE/MAW-Volunteer-Hub',
       langs: ['React.js', 'MongoDB'],
       desc: 'A volunteer portal for the San Diego chapter of the Make-A-Wish Foundation, built as part of Triton Software Engineering.'
@@ -140,7 +141,7 @@
             <Revealer play={play[3]} string="Resume & Contact" delay={300} />
           </h2>
           <p>
-            <a class="contact" href="/resume.pdf">
+            <a class="contact" href="{base}/resume.pdf">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"

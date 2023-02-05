@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
   import Revealer from '$lib/revealer.svelte';
 
   const colors = ['blue', 'red', 'orange', 'tan'];
@@ -45,7 +46,7 @@
       <div class="circ second">
         <div class="circ third">
           <div class="circ fourth">
-            <img src="/me.png" alt="Andrew Russell" />
+            <img src="{base}/me.png" alt="Andrew Russell" />
           </div>
         </div>
       </div>
