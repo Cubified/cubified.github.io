@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,300;0,400;0,600;1,400;1,600&display=swap');
+
+      :root {
+        --color-white: #f0f4f4;
+        --color-black: #000000;
+        /*
+        --color-red: #e5340b;
+        --color-blue: #0c5679;
+        --color-orange: #f28a0f;
+        --color-tan: #fee9bd;
+        --color-brown: #4a2d1b;
+        */
+
+        --color-red: #698269;
+        --color-blue: #b99b6b;
+        --color-orange: #aa5656;
+        --color-tan: #f1dbbf;
+        --color-brown: #594545;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--color-brown);
+      }
+      * {
+        font-family: 'Source Serif Pro', serif;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-style: italic;
+        font-weight: 700;
+        color: var(--color-tan);
+      }
+      h1 {
+        font-size: 3rem;
+        text-shadow: 4px 4px var(--color-black);
+      }
+      h2 {
+        font-size: 2.5rem;
+        text-shadow: 3px 3px var(--color-black);
+      }
+      h3 {
+        font-size: 1.25rem;
+        text-shadow: 2px 2px var(--color-black);
+      }
+      p {
+        font-weight: 200;
+        line-height: 150%;
+        text-shadow: 1px 1px var(--color-black);
+        color: var(--color-tan);
+      }
+      a[href]:not([href='']) {
+        font-weight: 600;
+        color: #bdcdd6;
+      }
+      a[href]:not([href='']):active {
+        color: #6096b4;
+      }
+    </style>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>
