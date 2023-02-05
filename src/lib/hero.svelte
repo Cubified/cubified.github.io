@@ -10,6 +10,8 @@
   onMount(() => {
     setTimeout(() => {
       color_els.forEach((el, i) => {
+        el.style.transition = 'transform 1.2s';
+        el.offsetHeight; // Reflow
         setTimeout(() => {
           el.style.transform = 'scaleX(1)';
         }, i * 150);
@@ -77,7 +79,6 @@
     height: 2rem;
     transform: scaleX(0);
     transform-origin: left center;
-    transition: transform 1.2s;
   }
   @media only screen and (max-width: 500px) {
     .bar {
@@ -102,6 +103,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    max-width: 90vw;
+    margin: 0 auto;
   }
 
   .circles {

@@ -19,13 +19,16 @@
     }
 
     if (!parent || !els.length) return;
-    els.forEach((el) => (el.style.transform = 'scale(1)'));
-    els[0].offsetHeight; // Reflow
     els.forEach((el) => {
-      const center =
-        parent.scrollLeft - el.offsetWidth / 2 + parent.offsetWidth / 2;
+      el.style.transform = 'scale(1)';
+      el.offsetHeight; // Reflow
+
+      const rect = el.getBoundingClientRect();
+      const center = (window.innerWidth / 2);
       const val = Math.pow(
-        Math.sin((Math.PI * el.getBoundingClientRect().left) / center),
+        Math.sin(
+          (Math.PI / 2) * (rect.left + (rect.width / 2)) / center
+        ),
         2
       );
       const clamp = Math.max(0.5, Math.min(1, val));
@@ -36,6 +39,9 @@
 
   $: if (ready && !fired) {
     setTimeout(() => {
+      if (!parent.parentNode) return;
+
+      parent.parentNode.scrollTo(18 * 16, 0);
       scroll({ target: parent.parentNode });
       window.addEventListener('resize', () =>
         scroll({ target: parent.parentNode })
@@ -68,11 +74,12 @@
     transition: opacity 0.3s;
   }
   .projects {
-    width: 200vw;
+    width: 200rem;
     flex: 1;
     display: flex;
   }
   .project {
+    width: 30rem;
     display: flex;
     align-items: center;
     justify-content: center;

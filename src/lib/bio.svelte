@@ -104,11 +104,14 @@
               href="http://trulioo.com">Trulioo</a
             >, where I work on implementing <b>proof-of-concept projects</b> and
             developing
-            <b>full-stack WordPress themes</b>. I am also an
-            <b>Engineering Manager</b>
-            with
-            <b>Triton Software Engineering</b>
-            at UCSD, responsible for leading 8 developers in implementing a landing
+            <b>full-stack WordPress themes</b>.
+
+            <br />
+            <br />
+
+            I am also an <b>Engineering Manager</b> with
+            <a href="https://tse.ucsd.edu">Triton Software Engineering</a> at UCSD,
+            responsible for leading 8 developers in implementing a landing
             page for Los Angeles-based non-profit
             <a href="https://fixnation.org">FixNation</a>.
           </p>

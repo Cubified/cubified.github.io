@@ -9,6 +9,7 @@
     show = false;
 
   onMount(() => {
+    splitter.style.transition = 'transform 1s';
     splitter.offsetHeight; // Reflow
     show = true;
   });
@@ -72,7 +73,6 @@
     background: var(--color-blue);
     transform: rotate(-30deg) translate(100vw, 100vh);
     opacity: 0;
-    transition: transform 1s;
   }
   .splitter.shown {
     opacity: 1;
