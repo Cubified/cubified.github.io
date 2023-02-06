@@ -263,7 +263,7 @@
     transition: width 0.6s;
   }
   .projects {
-    padding: 2rem 0;
+    padding: 2rem 0 0 0;
   }
   .content .child .box {
     width: 35rem;
@@ -272,7 +272,7 @@
     padding: 2rem 0;
   }
   h2.box {
-    padding: 0;
+    padding: 0 !important;
   }
 
   .content .first {
