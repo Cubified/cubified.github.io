@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
+  import Dots from '$lib/dots.svelte';
   import Hero from '$lib/hero.svelte';
   import Bio from '$lib/bio.svelte';
   import Footer from '$lib/footer.svelte';
@@ -46,6 +47,7 @@
 </svelte:head>
 
 <div class="parent">
+  <Dots />
   <div bind:this={splitter} class="splitter" class:shown={show} />
 </div>
 

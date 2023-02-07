@@ -29,28 +29,30 @@
     {/each}
   </div>
 
-  <div class="hero">
-    <div>
-      <h1>
-        <Revealer {play} string="Hi, I'm Andrew Russell." />
-      </h1>
-      <h3>
-        <Revealer
-          {play}
-          string="I'm a computer science student studying at UC San Diego."
-          delay={200}
-          interval={50}
-        />
-      </h3>
+  <div class="up">
+    <div class="hero">
+      <div>
+        <h1>
+          <Revealer {play} string="Hi, I'm Andrew Russell." />
+        </h1>
+        <h3>
+          <Revealer
+            {play}
+            string="I'm a computer science student studying at UC San Diego."
+            delay={200}
+            interval={50}
+          />
+        </h3>
+      </div>
     </div>
-  </div>
 
-  <div bind:this={circles} class="circles">
-    <div class="circ first">
-      <div class="circ second">
-        <div class="circ third">
-          <div class="circ fourth">
-            <img src="{base}/me.png" alt="Andrew Russell" />
+    <div bind:this={circles} class="circles">
+      <div class="circ first">
+        <div class="circ second">
+          <div class="circ third">
+            <div class="circ fourth">
+              <img src="{base}/me.png" alt="Andrew Russell" />
+            </div>
           </div>
         </div>
       </div>
@@ -98,6 +100,13 @@
   }
   .bar.tan {
     background: var(--color-tan);
+  }
+
+  @media only screen and (max-width: 500px) {
+    .up {
+      position: relative;
+      top: -3rem;
+    }
   }
 
   .hero {
