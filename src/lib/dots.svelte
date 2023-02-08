@@ -73,8 +73,6 @@
         `
   precision mediump float;
 
-  #define RAD 0.04
-
   uniform float u_time;
   uniform vec2 u_resolution;
 
@@ -83,45 +81,58 @@
   vec3 c_brown = vec3(89.0, 69.0, 69.0) / 255.0;
   vec3 c_tan = vec3(110.0, 90.0, 90.0) / 255.0;
 
-  float
-  hash(vec2 p)
-  {
-    p  = 50.0*fract( p*0.3183099 + vec2(0.71,0.113));
-    return -1.0+2.0*fract( p.x*p.y*(p.x+p.y) );
+  vec2 GetGradient(vec2 intPos, float t) {
+    float rand = fract(sin(dot(intPos, vec2(12.9898, 78.233))) * 43758.5453);;
+    
+    // Rotate gradient: random starting rotation, random rotation rate
+    float angle = 6.283185 * rand + 4.0 * t * rand;
+    return vec2(cos(angle), sin(angle));
   }
 
-  float
-  noise(in vec2 p)
-  {
-    vec2 i = floor( p );
-    vec2 f = fract( p );
-        
-    vec2 u = f*f*(3.0-2.0*f);
-
-    return mix( mix( hash( i + vec2(0.0,0.0) ), 
-                     hash( i + vec2(1.0,0.0) ), u.x),
-                mix( hash( i + vec2(0.0,1.0) ), 
-                     hash( i + vec2(1.0,1.0) ), u.x), u.y);
+  float Pseudo3dNoise(vec3 pos) {
+    vec2 i = floor(pos.xy);
+    vec2 f = pos.xy - i;
+    vec2 blend = f * f * (3.0 - 2.0 * f);
+    float noiseVal = 
+      mix(
+        mix(
+          dot(GetGradient(i + vec2(0, 0), pos.z), f - vec2(0, 0)),
+          dot(GetGradient(i + vec2(1, 0), pos.z), f - vec2(1, 0)),
+          blend.x),
+        mix(
+          dot(GetGradient(i + vec2(0, 1), pos.z), f - vec2(0, 1)),
+          dot(GetGradient(i + vec2(1, 1), pos.z), f - vec2(1, 1)),
+          blend.x),
+      blend.y
+    );
+    return noiseVal / 0.7; // normalize to about [-1..1]
   }
 
-  void
-  main()
-  {
-    vec2 p = v_position.xy;
+  float ease(float x) {
+    return (x < 0.5 ? 2.0 * x * x : 1.0 - pow(-2.0 * x + 2.0, 2.0) / 2.0);
+  }
 
-    float time = u_time + 3.25;
+  #define rad 0.4
+  #define halfrad (rad / 2.0)
+  #define tenrad (rad * 10.0)
+  #define possin(x) ((sin(x) + 1.0) / 2.0)
+  void main() {
+    vec2 uv = v_position.xy;
+    mat2 rot = mat2(cos(u_time / 10.0), -sin(u_time / 10.0), sin(u_time / 10.0), cos(u_time / 10.0));
+    uv = rot * uv;
 
-    vec2 uv = p + time * 0.25;
+    float noiseVal = 0.5 + 0.5 * Pseudo3dNoise(vec3(uv * (tenrad), u_time));
 
-    float f = noise(2.0 * uv);
-    f = 0.5 + 0.5 * f;
+    // if (length(mod(uv + halfrad, rad) - halfrad) <= noiseVal / tenrad) {
 
-    vec2 m = mod(p, RAD);
-    float s = pow(pow(sin(f), 2.0), sin(time / 2.0) * 6.0);
-    if (distance(m, vec2(RAD / 2.0)) <= min(pow(s, 2.0), RAD / 2.4)) {
-      gl_FragColor = vec4(mix(c_tan, c_brown, f), 1.0);
+    float cutoff = possin(u_time) * 0.2;
+    cutoff = clamp(cutoff, 0.09, 0.2);
+    if (u_time < 2.6) cutoff = mix(0.3, cutoff, clamp(ease(u_time - 1.6), 0.0, 1.0));
+
+    if (noiseVal / tenrad >= cutoff) {
+        gl_FragColor = vec4(mix(c_brown, c_tan, noiseVal), 1.0);
     } else {
-      discard;
+        discard;
     }
   }
         `
@@ -159,7 +170,7 @@
       const render = () => {
         requestAnimationFrame(render);
 
-        if (performance.now() - last <= 1000 / 60) return;
+        if (performance.now() - last <= 1000 / 120) return;
         last = performance.now();
 
         gl.useProgram(prog);
