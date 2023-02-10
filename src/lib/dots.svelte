@@ -28,7 +28,7 @@
     gl.deleteProgram(program);
   };
 
-  let canv;
+  let canv, frame, m_pos = [-999, -999];
   onMount(() => {
     setTimeout(() => {
       const resize = () => {
@@ -43,6 +43,19 @@
       };
       window.addEventListener('resize', resize);
       resize();
+
+      document.addEventListener('mousemove', (e) => {
+        m_pos = [((e.pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.pageY / window.innerHeight)) - 0.5) * 2];
+      });
+      document.addEventListener('touchstart', (e) => {
+        m_pos = [((e.touches[0].pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].pageY / window.innerHeight)) - 0.5) * 2];
+      });
+      document.addEventListener('touchmove', (e) => {
+        m_pos = [((e.touches[0].pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].pageY / window.innerHeight)) - 0.5) * 2];
+      });
+      document.addEventListener('touchend', (e) => {
+        m_pos = [-999, -999];
+      });
 
       const gl = canv.getContext('webgl', { antialias: true });
       if (!gl) {
@@ -75,6 +88,7 @@
 
   uniform float u_time;
   uniform vec2 u_resolution;
+  uniform vec2 u_mouse;
 
   varying vec4 v_position;
 
@@ -125,6 +139,9 @@
 
     // if (length(mod(uv + halfrad, rad) - halfrad) <= noiseVal / tenrad) {
 
+    // float blend = clamp(pow(distance(v_position.xy, u_mouse), 2.0), 0.0, 0.4);
+    // if (blend <= 0.05) discard;
+
     float cutoff = possin(u_time) * 0.2;
     cutoff = clamp(cutoff, 0.09, 0.2);
     if (u_time < 2.6) cutoff = mix(0.3, cutoff, clamp(ease(u_time - 1.6), 0.0, 1.0));
@@ -141,6 +158,7 @@
       const prog = createProgram(gl, vs, fs);
       const time = gl.getUniformLocation(prog, 'u_time');
       const res = gl.getUniformLocation(prog, 'u_resolution');
+      const mouse = gl.getUniformLocation(prog, 'u_mouse');
       const pos = gl.getAttribLocation(prog, 'a_position');
 
       const buf = gl.createBuffer();
@@ -168,7 +186,7 @@
 
       let last = performance.now();
       const render = () => {
-        requestAnimationFrame(render);
+        frame = requestAnimationFrame(render);
 
         if (performance.now() - last <= 1000 / 120) return;
         last = performance.now();
@@ -178,12 +196,38 @@
           const max = Math.max(canv.width, canv.height);
           gl.viewport(0, 0, max, max);
           gl.uniform2f(res, max, max);
+          gl.uniform2f(mouse, ...m_pos);
         }
         gl.uniform1f(time, performance.now() / 1000.0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       };
-      render();
-    }, 1000);
+      /*
+      const obs = new IntersectionObserver(
+        (entries) => {
+          if (!entries[0].isIntersecting && frame) {
+            cancelAnimationFrame(frame);
+            frame = null;
+          } else if (entries[0].isIntersecting && !frame) {
+            frame = requestAnimationFrame(render);
+          }
+        },
+        {
+          root: null,
+          rootMargin: '0px'
+        }
+      );
+      obs.observe(canv);
+      */
+      document.addEventListener('scroll', () => {
+        if (window.scrollY > window.innerHeight && frame) {
+          cancelAnimationFrame(frame);
+          frame = null;
+        } else if (window.scrollY <= window.innerHeight && !frame) {
+          frame = requestAnimationFrame(render);
+        }
+      });
+      frame = requestAnimationFrame(render);
+    }, 800);
   });
 </script>
 

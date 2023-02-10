@@ -69,6 +69,7 @@
         <a href={url}>{name}</a>
         <p>{langs.join(', ')}</p>
         <p>{desc}</p>
+        <!--<button on:click={() => {/* TODO */}}>\/</button>-->
       </div>
     {/each}
   </div>
@@ -76,7 +77,7 @@
 
 <style>
   .container {
-    width: 100vw;
+    width: 100%;
     overflow: auto;
     padding: 2rem 0;
     transition: opacity 0.3s;
@@ -112,4 +113,14 @@
     box-shadow: 2px 2px 0 var(--color-black);
     border-radius: 6px;
   }
+
+  /*
+  button {
+    font-size: 20px;
+    background: transparent;
+    border: none;
+    color: var(--color-tan);
+    cursor: pointer;
+  }
+  */
 </style>

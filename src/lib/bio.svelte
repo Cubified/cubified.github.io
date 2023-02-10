@@ -76,7 +76,7 @@
     await tick();
     setTimeout(() => {
       play[i] = true;
-      content.children[i].children[0].style.width = '100vw';
+      content.children[i].children[0].style.width = '100%';
       setTimeout(() => {
         content.children[i].children[0].style.transition = 'none';
       }, 600);
@@ -152,7 +152,7 @@
           <h2 class="box">
             <Revealer play={play[2]} string="Projects" delay={300} />
           </h2>
-          <p>
+          <p class="scroller">
             <Projects {ready} {projects} />
           </p>
         </div>
@@ -225,13 +225,13 @@
   }
 
   .bio {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     background: var(--color-brown);
     border-top: 2rem solid var(--color-tan);
   }
   .bar {
-    width: 100vw;
+    width: 100%;
     border-top: 2rem solid var(--color-orange);
   }
   .bar.second {
@@ -273,6 +273,10 @@
   }
   h2.box {
     padding: 0 !important;
+  }
+
+  .content .child .scroller {
+    overflow: hidden;
   }
 
   .content .first {
