@@ -44,21 +44,24 @@
     window.addEventListener('resize', resize);
     resize();*/
 
-    document.addEventListener('mousedown', () => {
+    document.addEventListener('mousedown', (e) => {
+      m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
       view_mode = !view_mode;
     });
     document.addEventListener('mousemove', (e) => {
       m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
     });
+    /*
     document.addEventListener('touchstart', (e) => {
-      m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
-      view_mode = true;
+      // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
     });
     document.addEventListener('touchmove', (e) => {
-      m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
-    });
-    document.addEventListener('touchend', () => {
-      view_mode = false;
+      // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
+    });*/
+
+    window.addEventListener('deviceorientation', (e) => {
+      alert(e.alpha);
+      m_pos = [e.alpha, e.beta];
     });
 
     const gl = canv.getContext('webgl', { antialias: true });

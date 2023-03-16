@@ -61,7 +61,7 @@
       less: ['Contributing to a project as a team member', 'Agile software development'],
     },
     {
-      name: 'Y-Stem and Chess Mobile App',
+      name: 'Y-Stem and Chess',
       img: `${base}/ysc.png`,
       url: 'https://github.com/TritonSE/YSC-Mobile-Application',
       langs: ['TypeScript', 'React Native'],

@@ -89,6 +89,7 @@
   }
 
   .above {
+    overflow: hidden;
     position: relative;
     z-index: 1;
   }

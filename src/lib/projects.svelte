@@ -31,7 +31,7 @@
       const center = window.innerWidth / 2;
       const val = Math.pow(
         Math.sin(((Math.PI / 2) * (rect.left + rect.width / 2)) / center),
-        window.innerWidth <= 500 ? 1 : 2
+        1
       );
       const clamp = Math.max(0.5, Math.min(1, val));
       el.style.transform = `scale(${clamp})`;
