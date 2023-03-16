@@ -28,206 +28,219 @@
     gl.deleteProgram(program);
   };
 
-  let canv, frame, m_pos = [-999, -999];
+  let canv, frame, m_pos = [0.0, 0.5], view_mode = false;
   onMount(() => {
-    setTimeout(() => {
-      const resize = () => {
-        if (!canv) return;
-        const max = Math.max(window.innerWidth, window.innerHeight);
-        canv.style.width = max + 'px';
-        canv.style.height = max + 'px';
+    /*const resize = () => {
+      if (!canv) return;*/
+      // const max = Math.max(window.innerWidth, window.innerHeight);
+      const max = Math.max(screen.width, screen.height);
+      canv.style.width = max + 'px';
+      canv.style.height = max + 'px';
 
-        const ratio = window.devicePixelRatio || 1;
-        canv.width = max * ratio;
-        canv.height = max * ratio;
-      };
-      window.addEventListener('resize', resize);
-      resize();
+      const ratio = window.devicePixelRatio || 1;
+      canv.width = max * ratio;
+      canv.height = max * ratio;
+    /*};
+    window.addEventListener('resize', resize);
+    resize();*/
 
-      document.addEventListener('mousemove', (e) => {
-        m_pos = [((e.pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.pageY / window.innerHeight)) - 0.5) * 2];
-      });
-      document.addEventListener('touchstart', (e) => {
-        m_pos = [((e.touches[0].pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].pageY / window.innerHeight)) - 0.5) * 2];
-      });
-      document.addEventListener('touchmove', (e) => {
-        m_pos = [((e.touches[0].pageX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].pageY / window.innerHeight)) - 0.5) * 2];
-      });
-      document.addEventListener('touchend', (e) => {
-        m_pos = [-999, -999];
-      });
+    document.addEventListener('mousedown', () => {
+      view_mode = !view_mode;
+    });
+    document.addEventListener('mousemove', (e) => {
+      m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
+    });
+    document.addEventListener('touchstart', (e) => {
+      m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
+      view_mode = true;
+    });
+    document.addEventListener('touchmove', (e) => {
+      m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
+    });
+    document.addEventListener('touchend', () => {
+      view_mode = false;
+    });
 
-      const gl = canv.getContext('webgl', { antialias: true });
-      if (!gl) {
-        return;
-      }
-
-      const vs = createShader(
-        gl,
-        gl.VERTEX_SHADER,
-        `
-  precision mediump float;
-
-  attribute vec4 a_position;
-
-  varying vec4 v_position;
-
-  void
-  main()
-  {
-    gl_Position = a_position;
-    v_position = a_position;
-  }
-        `
-      );
-      const fs = createShader(
-        gl,
-        gl.FRAGMENT_SHADER,
-        `
-  precision mediump float;
-
-  uniform float u_time;
-  uniform vec2 u_resolution;
-  uniform vec2 u_mouse;
-
-  varying vec4 v_position;
-
-  vec3 c_brown = vec3(89.0, 69.0, 69.0) / 255.0;
-  vec3 c_tan = vec3(110.0, 90.0, 90.0) / 255.0;
-
-  vec2 GetGradient(vec2 intPos, float t) {
-    float rand = fract(sin(dot(intPos, vec2(12.9898, 78.233))) * 43758.5453);;
-    
-    // Rotate gradient: random starting rotation, random rotation rate
-    float angle = 6.283185 * rand + 4.0 * t * rand;
-    return vec2(cos(angle), sin(angle));
-  }
-
-  float Pseudo3dNoise(vec3 pos) {
-    vec2 i = floor(pos.xy);
-    vec2 f = pos.xy - i;
-    vec2 blend = f * f * (3.0 - 2.0 * f);
-    float noiseVal = 
-      mix(
-        mix(
-          dot(GetGradient(i + vec2(0, 0), pos.z), f - vec2(0, 0)),
-          dot(GetGradient(i + vec2(1, 0), pos.z), f - vec2(1, 0)),
-          blend.x),
-        mix(
-          dot(GetGradient(i + vec2(0, 1), pos.z), f - vec2(0, 1)),
-          dot(GetGradient(i + vec2(1, 1), pos.z), f - vec2(1, 1)),
-          blend.x),
-      blend.y
-    );
-    return noiseVal / 0.7; // normalize to about [-1..1]
-  }
-
-  float ease(float x) {
-    return (x < 0.5 ? 2.0 * x * x : 1.0 - pow(-2.0 * x + 2.0, 2.0) / 2.0);
-  }
-
-  #define rad 0.4
-  #define halfrad (rad / 2.0)
-  #define tenrad (rad * 10.0)
-  #define possin(x) ((sin(x) + 1.0) / 2.0)
-  void main() {
-    vec2 uv = v_position.xy;
-    mat2 rot = mat2(cos(u_time / 10.0), -sin(u_time / 10.0), sin(u_time / 10.0), cos(u_time / 10.0));
-    uv = rot * uv;
-
-    float noiseVal = 0.5 + 0.5 * Pseudo3dNoise(vec3(uv * (tenrad), u_time));
-
-    // if (length(mod(uv + halfrad, rad) - halfrad) <= noiseVal / tenrad) {
-
-    // float blend = clamp(pow(distance(v_position.xy, u_mouse), 2.0), 0.0, 0.4);
-    // if (blend <= 0.05) discard;
-
-    float cutoff = possin(u_time) * 0.2;
-    cutoff = clamp(cutoff, 0.09, 0.2);
-    if (u_time < 2.6) cutoff = mix(0.3, cutoff, clamp(ease(u_time - 1.6), 0.0, 1.0));
-
-    if (noiseVal / tenrad >= cutoff) {
-        gl_FragColor = vec4(mix(c_brown, c_tan, noiseVal), 1.0);
-    } else {
-        discard;
+    const gl = canv.getContext('webgl', { antialias: true });
+    if (!gl) {
+      return;
     }
+
+    const vs = createShader(
+      gl,
+      gl.VERTEX_SHADER,
+      `
+precision mediump float;
+
+attribute vec4 a_position;
+
+varying vec4 v_position;
+
+void
+main()
+{
+  gl_Position = a_position;
+  v_position = a_position;
+}
+      `
+    );
+    const fs = createShader(
+      gl,
+      gl.FRAGMENT_SHADER,
+      `
+precision mediump float;
+
+uniform bool u_mode;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+
+varying vec4 v_position;
+
+vec3 c_brown = vec3(89.0, 69.0, 69.0) / 255.0;
+vec3 c_tan = vec3(110.0, 90.0, 90.0) / 255.0;
+
+vec2 GetGradient(vec2 intPos, float t) {
+  float rand = fract(sin(dot(intPos, vec2(12.9898, 78.233))) * 43758.5453);;
+  
+  // Rotate gradient: random starting rotation, random rotation rate
+  float angle = 6.283185 * rand + 4.0 * t * rand;
+  return vec2(cos(angle), sin(angle));
+}
+
+float Pseudo3dNoise(vec3 pos) {
+  vec2 i = floor(pos.xy);
+  vec2 f = pos.xy - i;
+  vec2 blend = f * f * (3.0 - 2.0 * f);
+  float noiseVal = 
+    mix(
+      mix(
+        dot(GetGradient(i + vec2(0, 0), pos.z), f - vec2(0, 0)),
+        dot(GetGradient(i + vec2(1, 0), pos.z), f - vec2(1, 0)),
+        blend.x),
+      mix(
+        dot(GetGradient(i + vec2(0, 1), pos.z), f - vec2(0, 1)),
+        dot(GetGradient(i + vec2(1, 1), pos.z), f - vec2(1, 1)),
+        blend.x),
+    blend.y
+  );
+  return noiseVal / 0.7; // normalize to about [-1..1]
+}
+
+float ease(float x) {
+  return (x < 0.5 ? 2.0 * x * x : 1.0 - pow(-2.0 * x + 2.0, 2.0) / 2.0);
+}
+
+#define rad 0.4
+#define halfrad (rad / 2.0)
+#define tenrad (rad * 10.0)
+#define possin(x) ((sin(x) + 1.0) / 2.0)
+void main() {
+  vec2 uv = v_position.xy;
+  mat2 rot = mat2(cos(u_time / 10.0), -sin(u_time / 10.0), sin(u_time / 10.0), cos(u_time / 10.0));
+  uv = rot * uv;
+
+  float noiseVal = 0.5 + 0.5 * Pseudo3dNoise(vec3(uv * (tenrad), u_time));
+
+  // if (length(mod(uv + halfrad, rad) - halfrad) <= noiseVal / tenrad) {
+
+  // float blend = clamp(pow(distance(v_position.xy, u_mouse), 2.0), 0.0, 0.4);
+  // if (blend <= 0.05) discard;
+
+  if (u_time < 0.8) noiseVal = 0.0;
+  else if (u_time >= 0.8 && u_time < 1.3) noiseVal *= (u_time - 0.8) * 2.0;
+  noiseVal *= 0.75 / distance(v_position.xy, u_mouse);
+  noiseVal = min(noiseVal, 1.5);
+
+  float cutoff = possin(u_time) * 0.2;
+  cutoff = clamp(cutoff, 0.09, 0.2);
+  if (u_time < 2.6) cutoff = mix(0.3, cutoff, clamp(ease(u_time - 1.6), 0.0, 1.0));
+
+  if (u_mode) noiseVal = mod(length(v_position), noiseVal);
+
+  if (noiseVal / tenrad >= cutoff) {
+      gl_FragColor = vec4(mix(c_brown, c_tan, noiseVal), 1.0);
+  } else {
+      discard;
   }
-        `
-      );
+}
+      `
+    );
 
-      const prog = createProgram(gl, vs, fs);
-      const time = gl.getUniformLocation(prog, 'u_time');
-      const res = gl.getUniformLocation(prog, 'u_resolution');
-      const mouse = gl.getUniformLocation(prog, 'u_mouse');
-      const pos = gl.getAttribLocation(prog, 'a_position');
+    const prog = createProgram(gl, vs, fs);
+    const mode = gl.getUniformLocation(prog, 'u_mode');
+    const time = gl.getUniformLocation(prog, 'u_time');
+    const res = gl.getUniformLocation(prog, 'u_resolution');
+    const mouse = gl.getUniformLocation(prog, 'u_mouse');
+    const pos = gl.getAttribLocation(prog, 'a_position');
 
-      const buf = gl.createBuffer();
-      gl.bindBuffer(
-        gl.ARRAY_BUFFER, buf
-      );
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0]),
-        gl.STATIC_DRAW
-      );
-    
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER, buf
+    );
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0]),
+      gl.STATIC_DRAW
+    );
+  
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
-      gl.enable(gl.DEPTH_TEST);
-      // gl.enable(gl.CULL_FACE);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.DEPTH_TEST);
+    // gl.enable(gl.CULL_FACE);
+    gl.enable(gl.BLEND);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.vertexAttribPointer(pos, 3, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(pos);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.vertexAttribPointer(pos, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(pos);
 
-      let last = performance.now();
-      const render = () => {
-        frame = requestAnimationFrame(render);
+    let last = performance.now();
+    const render = () => {
+      frame = requestAnimationFrame(render);
 
-        if (performance.now() - last <= 1000 / 120) return;
-        last = performance.now();
+      if (performance.now() - last <= 1000 / 120) return;
+      last = performance.now();
 
-        gl.useProgram(prog);
-        if (canv) {
-          const max = Math.max(canv.width, canv.height);
-          gl.viewport(0, 0, max, max);
-          gl.uniform2f(res, max, max);
-          gl.uniform2f(mouse, ...m_pos);
-        }
-        gl.uniform1f(time, performance.now() / 1000.0);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      };
-      /*
-      const obs = new IntersectionObserver(
-        (entries) => {
-          if (!entries[0].isIntersecting && frame) {
-            cancelAnimationFrame(frame);
-            frame = null;
-          } else if (entries[0].isIntersecting && !frame) {
-            frame = requestAnimationFrame(render);
-          }
-        },
-        {
-          root: null,
-          rootMargin: '0px'
-        }
-      );
-      obs.observe(canv);
-      */
-      document.addEventListener('scroll', () => {
-        if (window.scrollY > window.innerHeight && frame) {
+      gl.useProgram(prog);
+      if (canv) {
+        const max = Math.max(canv.width, canv.height);
+        gl.viewport(0, 0, max, max);
+        gl.uniform2f(res, max, max);
+        gl.uniform2f(mouse, ...m_pos);
+      }
+      gl.uniform1f(mode, view_mode);
+      gl.uniform1f(time, performance.now() / 1000.0);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+    /*
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting && frame) {
           cancelAnimationFrame(frame);
           frame = null;
-        } else if (window.scrollY <= window.innerHeight && !frame) {
+        } else if (entries[0].isIntersecting && !frame) {
           frame = requestAnimationFrame(render);
         }
-      });
-      frame = requestAnimationFrame(render);
-    }, 800);
+      },
+      {
+        root: null,
+        rootMargin: '0px'
+      }
+    );
+    obs.observe(canv);
+    */
+    document.addEventListener('scroll', () => {
+      if (window.scrollY > window.innerHeight && frame) {
+        cancelAnimationFrame(frame);
+        frame = null;
+      } else if (window.scrollY <= window.innerHeight && !frame) {
+        frame = requestAnimationFrame(render);
+      }
+    });
+    frame = requestAnimationFrame(render);
   });
 </script>
 
@@ -240,5 +253,10 @@
     position: absolute;
     top: 0;
     left: 0;
+  }
+  @media (prefers-reduced-motion) {
+    canvas {
+      opacity: 0;
+    }
   }
 </style>

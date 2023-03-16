@@ -11,35 +11,63 @@
       img: 'https://raw.githubusercontent.com/Cubified/tuibox/main/demos/demo_colorslide.gif',
       url: 'https://github.com/Cubified/tuibox',
       langs: ['C'],
-      desc: 'A single-header terminal UI (TUI) library, capable of creating mouse-driven, interactive applications on the command line.'
+      desc: 'A single-header terminal UI (TUI) library, capable of creating mouse-driven, interactive applications on the command line.',
+      chall: ['Memory management', 'Designing a useful API'],
+      less: ['ANSI escape sequences', 'C library development'],
     },
     {
       name: 'mode7',
       img: `${base}/mode7.gif`,
       url: 'https://github.com/Cubified/mode7',
       langs: ['JavaScript'],
-      desc: 'A pure-Javascript perspective transform (a la SNES Mode 7).'
+      desc: 'A pure-Javascript perspective transform (a la SNES Mode 7).',
+      chall: ['Understanding matrix transforms', 'Writing high-performance code'],
+      less: ['Web Workers and multithreading', 'Image processing'],
+    },
+    {
+      name: 'Trulioo.com',
+      img: `${base}/trulioo.png`,
+      url: 'https://www.trulioo.com',
+      langs: ['JavaScript', 'PHP'],
+      desc: 'Designed and implemented a custom 3D globe component from scratch using WebGL.  Also created all animations on site homepage with CSS and JS.',
+      chall: ['Storing geometry data efficiently', 'Meeting changing needs of other company teams'],
+      less: ['Writing high-performance matrix operations', 'Quaternions', 'Iterating upon feedback'],
     },
     {
       name: 'ntwm',
       img: 'https://raw.githubusercontent.com/Cubified/ntwm/master/images/modes/grid.png',
       url: 'https://github.com/Cubified/ntwm',
       langs: ['C'],
-      desc: 'A tiny, frameless, keyboard-driven tiling window manager with multimonitor support.'
+      desc: 'A tiny, frameless, keyboard-driven tiling window manager with multimonitor support.',
+      chall: ['Memory management', 'Effective and useful testing'],
+      less: ['Using data structures effectively', 'Understanding the X Window System'],
     },
     {
       name: 'lush',
       img: 'https://github.com/Cubified/lush/raw/main/demo.gif',
       url: 'https://github.com/Cubified/lush',
       langs: ['x86 Assembly', 'C'],
-      desc: 'A tiny UNIX shell. Supports syntax highlighting and command ghosting/onion skin by default, built on top of a custom line editor written in Assembly.'
+      desc: 'A tiny UNIX shell. Supports syntax highlighting and command ghosting/onion skin by default, built on top of a custom line editor written in Assembly.',
+      chall: ['Writing high-performance code', 'Caching data effectively'],
+      less: ['How Unix shells work', 'Fuzzy file finding'],
     },
     {
       name: 'Make-A-Wish Volunteer Hub',
       img: `${base}/maw.png`,
       url: 'https://github.com/TritonSE/MAW-Volunteer-Hub',
       langs: ['React.js', 'MongoDB'],
-      desc: 'A volunteer portal for the San Diego chapter of the Make-A-Wish Foundation, built as part of Triton Software Engineering.'
+      desc: 'A volunteer portal for the San Diego chapter of the Make-A-Wish Foundation, built as part of Triton Software Engineering.',
+      chall: ['Managing timezones and storing dates', 'Efficient image caching'],
+      less: ['Contributing to a project as a team member', 'Agile software development'],
+    },
+    {
+      name: 'Y-Stem and Chess Mobile App',
+      img: `${base}/ysc.png`,
+      url: 'https://github.com/TritonSE/YSC-Mobile-Application',
+      langs: ['TypeScript', 'React Native'],
+      desc: 'A real-time chess mobile application, built as part of Triton Software Engineering.',
+      chall: ['Leading a project team', 'Managing uncommitted team members'],
+      less: ['How to communicate with a project client', 'How to hold team members accountable'],
     },
     // { name: 'FixNation Landing Page', img: '', url: 'https://github.com/TritonSE/FIX-Landing-Page', desc: 'placeholder' },
     {
@@ -47,28 +75,36 @@
       img: 'https://github.com/Cubified/bdfedit/raw/main/demo.gif',
       url: 'https://github.com/Cubified/bdfedit',
       langs: ['C'],
-      desc: 'A terminal-based, mouse-driven BDF (bitmap) font editor.'
+      desc: 'A terminal-based, mouse-driven BDF (bitmap) font editor.',
+      chall: ['Writing a parser from scratch', 'Identifying and fixing edge cases'],
+      less: ['Patterns for high-performance file parsers', 'Iterative development'],
     },
     {
       name: 'term',
       img: 'https://github.com/Cubified/term/raw/main/demo.gif',
       url: 'https://github.com/Cubified/term',
       langs: ['C'],
-      desc: 'A tiny VT-100 terminal emulator for Linux, built with Unicode and Truecolor support.'
+      desc: 'A tiny VT-100 terminal emulator for Linux, built with Unicode and Truecolor support.',
+      chall: ['Memory management', 'Performance profiling and optimization'],
+      less: ['Efficient finite-state machines', 'ANSI escape sequences'],
     },
     {
       name: 'React Simple Scheduler',
       img: 'https://github.com/cubified/react-simple-scheduler/raw/main/demo/demo.png',
       url: 'https://github.com/Cubified/react-simple-scheduler',
       langs: ['TypeScript', 'React', 'SASS'],
-      desc: 'Simple, extensible scheduler and calendar components for React, modeled after Google Calendar.'
+      desc: 'Simple, extensible scheduler and calendar components for React, modeled after Google Calendar.',
+      chall: ['Managing timezones', ' Implementing repeating calendar events'],
+      less: ['Creating an NPM package', 'Responsive design']
     },
     {
       name: 'Softbody',
       img: 'https://github.com/Cubified/softbody/raw/main/demo.png',
       url: 'https://github.com/Cubified/softbody',
       langs: ['JavaScript'],
-      desc: 'A simple soft body physics simulation for n-sided polygons.'
+      desc: 'A simple soft body physics simulation for n-sided polygons.',
+      chall: ['Preventing simulation jittering', 'Understanding soft body dynamics'],
+      less: ['Creating physics simulations', 'Optimizing math routines'],
     }
   ];
 
