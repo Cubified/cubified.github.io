@@ -319,7 +319,7 @@
     background: var(--color-orange);
   }
   .content .second {
-    background: #344d67;
+    background: var(--color-navy);
   }
   .content .third {
     background: var(--color-red);

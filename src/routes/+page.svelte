@@ -38,7 +38,8 @@
   />
   <link rel="manifest" href="{base}/site.webmanifest" />
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
     name="description"
     content="A personal portfolio site for UC San Diego computer science student Andrew Russell."

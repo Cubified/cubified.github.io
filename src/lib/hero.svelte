@@ -64,6 +64,7 @@
   .intro {
     height: 100vh;
     min-height: 43rem;
+    user-select: none;
   }
 
   .bars {

@@ -14,7 +14,7 @@
     margin: 0;
     padding: 0 1rem;
     box-sizing: border-box;
-    background: var(--color-orange);
+    background: var(--color-navy);
     display: flex;
     align-items: center;
     justify-content: center;

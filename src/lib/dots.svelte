@@ -46,11 +46,15 @@
 
     document.addEventListener('mousedown', (e) => {
       m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
-      view_mode = !view_mode;
+      view_mode = true;
     });
     document.addEventListener('mousemove', (e) => {
       m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
     });
+    document.addEventListener('mouseup', (e) => {
+      view_mode = false;
+    });
+
     /*
     document.addEventListener('touchstart', (e) => {
       // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
@@ -58,11 +62,6 @@
     document.addEventListener('touchmove', (e) => {
       // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
     });*/
-
-    window.addEventListener('deviceorientation', (e) => {
-      alert(e.alpha);
-      m_pos = [e.alpha, e.beta];
-    });
 
     const gl = canv.getContext('webgl', { antialias: true });
     if (!gl) {
@@ -150,8 +149,8 @@ void main() {
   // float blend = clamp(pow(distance(v_position.xy, u_mouse), 2.0), 0.0, 0.4);
   // if (blend <= 0.05) discard;
 
-  if (u_time < 0.8) noiseVal = 0.0;
-  else if (u_time >= 0.8 && u_time < 1.3) noiseVal *= (u_time - 0.8) * 2.0;
+  if (u_time < 1.2) noiseVal = 0.0;
+  else if (u_time >= 1.2 && u_time < 1.7) noiseVal *= (u_time - 1.2) * 2.0;
   noiseVal *= 0.75 / distance(v_position.xy, u_mouse);
   noiseVal = min(noiseVal, 1.5);
 

@@ -1,36 +1,24 @@
 <script>
   import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
 
   export let ready = false;
   export let projects = [];
 
-  let x = 0,
+  let x = 0, w = 1,
     fired = false,
-    parent, viewing = -1, last = 0;
+    sizes = [], parent,
+    viewing = -1, last = 0;
   const els = [];
 
   const scroll = (e) => {
     x = Math.ceil(e.target.scrollLeft);
 
-    /*
-    if (x + e.target.offsetWidth >= e.target.scrollWidth) {
-      x = 1;
-      e.target.scrollTo(x, 0);
-    } else if (x <= 0) {
-      x = e.target.scrollWidth - e.target.offsetWidth - 1;
-      e.target.scrollTo(x, 0);
-    }
-    */
-
     if (!parent || !els.length) return;
-    els.forEach((el) => {
-      el.style.transform = 'scale(1)';
-      el.offsetHeight; // Reflow
-
-      const rect = el.getBoundingClientRect();
-      const center = window.innerWidth / 2;
+    els.forEach((el, i) => {
+      const center = w / 2;
       const val = Math.pow(
-        Math.sin(((Math.PI / 2) * (rect.left + rect.width / 2)) / center),
+        Math.sin(((Math.PI / 2) * ((sizes[i][0] - x) + sizes[i][1] / 2)) / center),
         1
       );
       const clamp = Math.max(0.5, Math.min(1, val));
@@ -39,14 +27,24 @@
     });
   };
 
+  const get_sizes = () => {
+    w = window.innerWidth;
+    for (let i = 0; i < els.length; i++) {
+      if (els[i]) sizes[i] = [els[i].offsetLeft, els[i].offsetWidth];
+    }
+    if (!parent?.parentNode) return;
+    scroll({ target: parent.parentNode });
+  };
+
+  onMount(() => {
+    get_sizes();
+    window.addEventListener('resize', get_sizes);
+  });
+
   $: if (ready && !fired) {
     setTimeout(() => {
-      parent.parentNode.scrollTo(window.innerWidth * 0.3, 0);
+      parent.parentNode.scrollTo(w * 0.3, 0);
       scroll({ target: parent.parentNode });
-      window.addEventListener('resize', () => {
-        if (!parent?.parentNode) return;
-        scroll({ target: parent.parentNode });
-      });
       fired = true;
     }, 700);
 
@@ -110,55 +108,10 @@
 </div>
 
 <style>
-  .info {
-    background: var(--color-brown);
-    height: 0;
-    overflow: hidden;
-    transition: height 0.2s;
-
-    --info-size: 300px;
-  }
-  .info.open {
-    height: var(--info-size);
-  }
-
-  .info .content {
-    width: var(--info-size);
-    height: var(--info-size);
-    background: var(--color-red);
-    border-radius: 100vw;
-    position: relative;
-    overflow: hidden;
-    top: -50vw;
-    margin: 0 auto;
-    transition: border-radius 0.3s ease 0.1s, top 0.3s, width 0.2s ease 0.15s;
-  }
-  .info.open .content {
-    width: 100vw;
-    border-radius: 0;
-    top: 0;
-  }
-  .info .content div {
-    width: 90vw;
-    max-width: 20rem;
-    padding-top: 1rem;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .info .content h3 {
-    margin: 0;
-  }
-  .info .content ul {
-    margin-top: 0.5rem;
-  }
-
   .container {
     width: 100%;
     overflow: auto;
-    padding: 2rem 0;
+    padding: 2rem 0 4rem 0;
     transition: opacity 0.3s;
   }
   .projects {
@@ -218,5 +171,49 @@
   }
   button.open {
     transform: rotate(180deg);
+  }
+
+  .info {
+    background: var(--color-brown);
+    height: 0;
+    overflow: hidden;
+    transition: height 0.2s;
+
+    --info-size: 300px;
+  }
+  .info.open {
+    height: var(--info-size);
+  }
+
+  .info .content {
+    width: var(--info-size);
+    height: var(--info-size);
+    background: var(--color-red);
+    border-radius: 100vw;
+    position: relative;
+    overflow: hidden;
+    top: -50vw;
+    margin: 0 auto;
+    transition: border-radius 0.3s ease 0.1s, top 0.3s, width 0.2s ease 0.15s;
+  }
+  .info.open .content {
+    width: 100vw;
+    border-radius: 0;
+    top: 0;
+  }
+  .info .content div {
+    width: 90vw;
+    max-width: 30rem;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .info .content h3 {
+    margin: 0;
+  }
+  .info .content ul {
+    margin-top: 0.5rem;
   }
 </style>
