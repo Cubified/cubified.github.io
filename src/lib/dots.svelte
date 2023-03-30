@@ -34,9 +34,6 @@
       if (!canv) return;*/
       // const max = Math.max(window.innerWidth, window.innerHeight);
       const max = Math.max(screen.width, screen.height);
-      canv.style.width = max + 'px';
-      canv.style.height = max + 'px';
-
       const ratio = window.devicePixelRatio || 1;
       canv.width = max * ratio;
       canv.height = max * ratio;
@@ -149,8 +146,8 @@ void main() {
   // float blend = clamp(pow(distance(v_position.xy, u_mouse), 2.0), 0.0, 0.4);
   // if (blend <= 0.05) discard;
 
-  if (u_time < 1.2) noiseVal = 0.0;
-  else if (u_time >= 1.2 && u_time < 1.7) noiseVal *= (u_time - 1.2) * 2.0;
+  /*if (u_time < 1.2) noiseVal = 0.0;
+  else if (u_time >= 1.2 && u_time < 1.7) noiseVal *= (u_time - 1.2) * 2.0;*/
   noiseVal *= 0.75 / distance(v_position.xy, u_mouse);
   noiseVal = min(noiseVal, 1.5);
 
@@ -249,13 +246,6 @@ void main() {
 <canvas bind:this={canv} />
 
 <style>
-  canvas {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
   @media (prefers-reduced-motion) {
     canvas {
       opacity: 0;

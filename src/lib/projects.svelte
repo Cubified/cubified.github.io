@@ -74,6 +74,7 @@
           on:click={() => {
             if (viewing === i) viewing = -1;
             else {
+              window.scrollBy(0, 100);
               viewing = i;
               last = viewing;
             }

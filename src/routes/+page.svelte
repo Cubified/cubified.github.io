@@ -48,8 +48,9 @@
 </svelte:head>
 
 <div class="parent">
-  <Dots />
-  <div bind:this={splitter} class="splitter" class:shown={show} />
+  <div bind:this={splitter} class="splitter" class:shown={show}>
+    <Dots />
+  </div>
 </div>
 
 <div class="above">
@@ -62,7 +63,7 @@
   .parent {
     width: 100vw;
     height: 200vh;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 0;
