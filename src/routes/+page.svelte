@@ -1,21 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
   import { base } from '$app/paths';
-  import Dots from '$lib/dots.svelte';
-  import Hero from '$lib/hero.svelte';
-  import Bio from '$lib/bio.svelte';
-  import Footer from '$lib/footer.svelte';
 
-  let splitter,
-    show = false;
-
-  onMount(() => {
-    setTimeout(() => {
-      splitter.style.transition = 'transform 1s';
-      splitter.offsetHeight; // Reflow
-      show = true;
-    }, 100);
-  });
+  import Background from '$lib/background.svelte';
 </script>
 
 <svelte:head>
@@ -47,51 +33,50 @@
   <title>Andrew Russell</title>
 </svelte:head>
 
-<div class="parent">
-  <Dots />
-  <div bind:this={splitter} class="splitter" class:shown={show} />
-</div>
+<div class="border" />
 
-<div class="above">
-  <Hero />
-  <Bio />
-  <Footer />
-</div>
+<main>
+  <h1>Hi, I'm Andrew Russell.</h1>
+  <h2>I write software.</h2>
+  <br />
+  <a href="/about">About</a>
+  <br />
+  <br />
+  <a href="/projects">Projects</a>
+</main>
+
+<Background />
 
 <style>
-  .parent {
-    width: 100vw;
-    height: 200vh;
-    position: fixed;
+  main, .border {
+    width: calc(100vw - 6rem);
+    height: calc(100vh - 6rem);
+    box-sizing: border-box;
+    margin: 3rem;
+    padding: 3rem;
+
+    text-align: center;
+    position: absolute;
     top: 0;
     left: 0;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .splitter {
-    width: 200%;
-    height: 200%;
-    position: absolute;
-    z-index: 0;
-    top: 20rem;
-    left: 15rem;
-    background: var(--color-blue);
-    transform: rotate(-30deg) translate(100vw, 100vh);
-    opacity: 0;
-  }
-  .splitter.shown {
-    opacity: 1;
-    transform: rotate(-30deg) translate(0);
-  }
-  @media only screen and (max-width: 700px) {
-    .splitter.shown {
-      transform: rotate(-30deg) translate(40vh, 25vh);
-    }
+    z-index: 2;
+    text-shadow: 0 2px 0 var(--color-dark);
   }
 
-  .above {
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
+  .border {
+    border: 1rem solid var(--color-light);
+    mix-blend-mode: difference;
+  }
+
+  a {
+    text-decoration: none;
+    box-shadow: inset 0 -0.1rem var(--color-light);
+    padding: 0 0.25rem;
+    transition: box-shadow 0.2s, color 0.2s, text-shadow 0.2s;
+  }
+  a:hover {
+    box-shadow: inset 0 -1.3rem var(--color-light);
+    color: var(--color-dark);
+    text-shadow: none;
   }
 </style>

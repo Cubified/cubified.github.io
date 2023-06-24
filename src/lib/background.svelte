@@ -28,41 +28,8 @@
     gl.deleteProgram(program);
   };
 
-  let canv, frame, m_pos = [0.0, 0.5], view_mode = false;
+  let canv;
   onMount(() => {
-    /*const resize = () => {
-      if (!canv) return;*/
-      // const max = Math.max(window.innerWidth, window.innerHeight);
-      const max = Math.max(screen.width, screen.height);
-      canv.style.width = max + 'px';
-      canv.style.height = max + 'px';
-
-      const ratio = window.devicePixelRatio || 1;
-      canv.width = max * ratio;
-      canv.height = max * ratio;
-    /*};
-    window.addEventListener('resize', resize);
-    resize();*/
-
-    document.addEventListener('mousedown', (e) => {
-      m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
-      view_mode = true;
-    });
-    document.addEventListener('mousemove', (e) => {
-      m_pos = [((e.clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.clientY / window.innerHeight)) - 0.5) * 2];
-    });
-    document.addEventListener('mouseup', (e) => {
-      view_mode = false;
-    });
-
-    /*
-    document.addEventListener('touchstart', (e) => {
-      // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
-    });
-    document.addEventListener('touchmove', (e) => {
-      // m_pos = [((e.touches[0].clientX / window.innerWidth) - 0.5) * 2, ((1.0 - (e.touches[0].clientY / window.innerHeight)) - 0.5) * 2];
-    });*/
-
     const gl = canv.getContext('webgl', { antialias: true });
     if (!gl) {
       return;
@@ -92,17 +59,16 @@ main()
       `
 precision mediump float;
 
-uniform bool u_mode;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 
 varying vec4 v_position;
 
-vec3 c_brown = vec3(89.0, 69.0, 69.0) / 255.0;
-vec3 c_tan = vec3(110.0, 90.0, 90.0) / 255.0;
+vec3 colorA = vec3(25.0, 25.0, 25.0) / 255.0;
+vec3 colorB = vec3(233.0, 233.0, 233.0) / 255.0;
 
-vec2 GetGradient(vec2 intPos, float t) {
+vec2 getGradient(vec2 intPos, float t) {
   float rand = fract(sin(dot(intPos, vec2(12.9898, 78.233))) * 43758.5453);;
   
   // Rotate gradient: random starting rotation, random rotation rate
@@ -110,19 +76,19 @@ vec2 GetGradient(vec2 intPos, float t) {
   return vec2(cos(angle), sin(angle));
 }
 
-float Pseudo3dNoise(vec3 pos) {
+float pseudo3dNoise(vec3 pos) {
   vec2 i = floor(pos.xy);
   vec2 f = pos.xy - i;
   vec2 blend = f * f * (3.0 - 2.0 * f);
   float noiseVal = 
     mix(
       mix(
-        dot(GetGradient(i + vec2(0, 0), pos.z), f - vec2(0, 0)),
-        dot(GetGradient(i + vec2(1, 0), pos.z), f - vec2(1, 0)),
+        dot(getGradient(i + vec2(0, 0), pos.z), f - vec2(0, 0)),
+        dot(getGradient(i + vec2(1, 0), pos.z), f - vec2(1, 0)),
         blend.x),
       mix(
-        dot(GetGradient(i + vec2(0, 1), pos.z), f - vec2(0, 1)),
-        dot(GetGradient(i + vec2(1, 1), pos.z), f - vec2(1, 1)),
+        dot(getGradient(i + vec2(0, 1), pos.z), f - vec2(0, 1)),
+        dot(getGradient(i + vec2(1, 1), pos.z), f - vec2(1, 1)),
         blend.x),
     blend.y
   );
@@ -137,12 +103,26 @@ float ease(float x) {
 #define halfrad (rad / 2.0)
 #define tenrad (rad * 10.0)
 #define possin(x) ((sin(x) + 1.0) / 2.0)
+
+#define SCALE 1.0
+
 void main() {
   vec2 uv = v_position.xy;
+
+  float noise = ease(0.2 + 0.8 * pseudo3dNoise(vec3(uv * SCALE, u_time * 0.5)));
+  float fudge = fract(sin((u_time / 30000.0) + dot(uv / (uv.x + 0.1), vec2(12.9898,78.233))) * 43758.5453);
+
+  noise *= mix(fudge, 1.0, noise);
+
+  gl_FragColor = vec4(mix(colorA, colorB, noise), 1.0);
+
+  return;
+
+/*
   mat2 rot = mat2(cos(u_time / 10.0), -sin(u_time / 10.0), sin(u_time / 10.0), cos(u_time / 10.0));
   uv = rot * uv;
 
-  float noiseVal = 0.5 + 0.5 * Pseudo3dNoise(vec3(uv * (tenrad), u_time));
+  float noiseVal = 0.5 + 0.5 * pseudo3dNoise(vec3(uv * (tenrad), u_time));
 
   // if (length(mod(uv + halfrad, rad) - halfrad) <= noiseVal / tenrad) {
 
@@ -158,23 +138,38 @@ void main() {
   cutoff = clamp(cutoff, 0.09, 0.2);
   if (u_time < 2.6) cutoff = mix(0.3, cutoff, clamp(ease(u_time - 1.6), 0.0, 1.0));
 
-  if (u_mode) noiseVal = mod(length(v_position), noiseVal);
-
   if (noiseVal / tenrad >= cutoff) {
       gl_FragColor = vec4(mix(c_brown, c_tan, noiseVal), 1.0);
   } else {
       discard;
   }
+*/
 }
       `
     );
 
     const prog = createProgram(gl, vs, fs);
-    const mode = gl.getUniformLocation(prog, 'u_mode');
-    const time = gl.getUniformLocation(prog, 'u_time');
-    const res = gl.getUniformLocation(prog, 'u_resolution');
-    const mouse = gl.getUniformLocation(prog, 'u_mouse');
-    const pos = gl.getAttribLocation(prog, 'a_position');
+    gl.useProgram(prog);
+
+    const u_time = gl.getUniformLocation(prog, 'u_time');
+    // const u_res = gl.getUniformLocation(prog, 'u_resolution');
+    const a_pos = gl.getAttribLocation(prog, 'a_position');
+
+    const resize = () => {
+      if (!canv) return;
+      const max = Math.max(window.innerWidth, window.innerHeight);
+      canv.style.width = max + 'px';
+      canv.style.height = max + 'px';
+
+      const ratio = window.devicePixelRatio || 1;
+      canv.width = max * ratio;
+      canv.height = max * ratio;
+
+      gl.viewport(0, 0, canv.width, canv.height);
+      // gl.uniform2f(u_res, max, max);
+    };
+    window.addEventListener('resize', resize);
+    resize();
 
     const buf = gl.createBuffer();
     gl.bindBuffer(
@@ -196,53 +191,20 @@ void main() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.vertexAttribPointer(pos, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(a_pos, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_pos);
 
     let last = performance.now();
-    const render = () => {
-      frame = requestAnimationFrame(render);
+    const render = (time) => {
+      requestAnimationFrame(render);
 
-      if (performance.now() - last <= 1000 / 120) return;
-      last = performance.now();
+      if (time - last <= 1000 / 120) return;
+      last = time;
 
-      gl.useProgram(prog);
-      if (canv) {
-        const max = Math.max(canv.width, canv.height);
-        gl.viewport(0, 0, max, max);
-        gl.uniform2f(res, max, max);
-        gl.uniform2f(mouse, ...m_pos);
-      }
-      gl.uniform1f(mode, view_mode);
-      gl.uniform1f(time, performance.now() / 1000.0);
+      gl.uniform1f(u_time, time / 1000.0);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
-    /*
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0].isIntersecting && frame) {
-          cancelAnimationFrame(frame);
-          frame = null;
-        } else if (entries[0].isIntersecting && !frame) {
-          frame = requestAnimationFrame(render);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px'
-      }
-    );
-    obs.observe(canv);
-    */
-    document.addEventListener('scroll', () => {
-      if (window.scrollY > window.innerHeight && frame) {
-        cancelAnimationFrame(frame);
-        frame = null;
-      } else if (window.scrollY <= window.innerHeight && !frame) {
-        frame = requestAnimationFrame(render);
-      }
-    });
-    frame = requestAnimationFrame(render);
+    render(performance.now());
   });
 </script>
 
@@ -255,10 +217,6 @@ void main() {
     position: absolute;
     top: 0;
     left: 0;
-  }
-  @media (prefers-reduced-motion) {
-    canvas {
-      opacity: 0;
-    }
+    z-index: 0;
   }
 </style>
