@@ -1,11 +1,13 @@
 <script>
   import { base } from '$app/paths';
 
+  import Border from '$lib/border.svelte';
   import Background from '$lib/background.svelte';
-  import Ball from '$lib/ball.svelte';
+  import Balls from '$lib/balls.svelte';
 </script>
 
 <svelte:head>
+  <meta charset="utf-8" />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
@@ -24,8 +26,7 @@
     href="{base}/favicon-16x16.png"
   />
   <link rel="manifest" href="{base}/site.webmanifest" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
     name="description"
@@ -34,5 +35,6 @@
   <title>Andrew Russell - Projects</title>
 </svelte:head>
 
+<Border />
 <Background />
-<Ball />
+<Balls />

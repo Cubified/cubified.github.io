@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
 
+  import Border from '$lib/border.svelte';
   import Background from '$lib/background.svelte';
 
   /*
@@ -216,16 +217,15 @@
   onMount(() => {
     let body;
     if (window.innerWidth <= 500) {
-      const x = (window.innerWidth <= 500 ? 10 : (window.innerWidth - boxes[0].offsetWidth) / 2);
       body = new Body([
-        [x, 10],
-        [x, 235],
-        [x, 510]
+        [10, 10],
+        [10, 235],
+        [10, 510]
       ], [
         [0, 1], [1, 2], [0, 2]
       ], 135, 250);
     } else {
-      body = new SpringBody(3, 250, 125, 250);
+      body = new SpringBody(3, 250, window.innerWidth / 4, 250);
     }
     const w = new World(() => {
       for (let i = 0; i < boxes.length; i++) {
@@ -289,6 +289,7 @@
 </script>
 
 <svelte:head>
+  <meta charset="utf-8" />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
@@ -307,8 +308,7 @@
     href="{base}/favicon-16x16.png"
   />
   <link rel="manifest" href="{base}/site.webmanifest" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
     name="description"
@@ -317,7 +317,7 @@
   <title>Andrew Russell - About</title>
 </svelte:head>
 
-<div class="border" />
+<Border />
 
 <main bind:this={parent}>
   <div bind:this={boxes[0]} class="box">
@@ -375,23 +375,6 @@
     top: 0;
     left: 0;
     z-index: 2;
-  }
-
-  .border {
-    width: calc(100vw - 6rem);
-    height: calc(100vh - 6rem);
-    box-sizing: border-box;
-    margin: 3rem;
-    padding: 3rem;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-  }
-  .border {
-    mix-blend-mode: difference;
-    border: 1rem solid var(--color-light);
   }
 
   a {

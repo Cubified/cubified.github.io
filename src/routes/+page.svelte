@@ -1,10 +1,12 @@
 <script>
   import { base } from '$app/paths';
 
+  import Border from '$lib/border.svelte';
   import Background from '$lib/background.svelte';
 </script>
 
 <svelte:head>
+  <meta charset="utf-8" />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
@@ -23,8 +25,7 @@
     href="{base}/favicon-16x16.png"
   />
   <link rel="manifest" href="{base}/site.webmanifest" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
     name="description"
@@ -33,7 +34,7 @@
   <title>Andrew Russell</title>
 </svelte:head>
 
-<div class="border" />
+<Border />
 
 <main>
   <h1>Hi, I'm Andrew Russell.</h1>
@@ -48,7 +49,7 @@
 <Background />
 
 <style>
-  main, .border {
+  main {
     width: calc(100vw - 6rem);
     height: calc(100vh - 6rem);
     box-sizing: border-box;
@@ -63,19 +64,14 @@
     text-shadow: 0 2px 0 var(--color-dark);
   }
 
-  .border {
-    border: 1rem solid var(--color-light);
-    mix-blend-mode: difference;
-  }
-
   a {
     text-decoration: none;
-    box-shadow: inset 0 -0.1rem var(--color-light);
-    padding: 0 0.25rem;
+    box-shadow: inset 0 -0.1em var(--color-light);
+    padding: 0.2rem 0.25rem;
     transition: box-shadow 0.2s, color 0.2s, text-shadow 0.2s;
   }
   a:hover {
-    box-shadow: inset 0 -1.3rem var(--color-light);
+    box-shadow: inset 0 -1.7rem var(--color-light);
     color: var(--color-dark);
     text-shadow: none;
   }
