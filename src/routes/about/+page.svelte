@@ -208,9 +208,9 @@
     if (window.innerWidth <= 500) {
       const x = window.innerWidth / 2;
       body = new Body([
-        [x, 350],
-        [x, 100],
-        [x, 600],
+        [x, 380],
+        [x, 110],
+        [x, 630],
       ], [
         [1, 0],
         [0, 2],
@@ -231,10 +231,11 @@
       for (let i = 0; i < boxes.length; i++) {
         if (!boxes[i] || !body.points[i]) break;
 
-        boxes[i].style.top =
-          body.points[i].y - boxes[i].offsetHeight / 2 + 'px';
-        boxes[i].style.left =
-          body.points[i].x - boxes[i].offsetWidth / 2 + 'px';
+        const x = body.points[i].x - boxes[i].offsetWidth / 2;
+        const y = body.points[i].y - boxes[i].offsetHeight / 2;
+        boxes[i].style.transform = `scale(0.8) translate(${x}px, ${y}px)`;
+        boxes[i].dataset.x = x;
+        boxes[i].dataset.y = y;
       }
     });
     w.add(body);
@@ -257,9 +258,11 @@
 
       if (i > -1) {
         mouse = w.points[i];
+        const x = parseInt(tmp.dataset.x);
+        const y = parseInt(tmp.dataset.y);
         start = new vec2(
-          e.pageX - tmp.offsetLeft - tmp.offsetWidth / 2,
-          e.pageY - tmp.offsetTop - tmp.offsetHeight / 2
+          e.pageX - x - tmp.offsetWidth / 2,
+          e.pageY - y - tmp.offsetHeight / 2
         );
         mousemove(e);
 
@@ -285,13 +288,13 @@
 
     parent.addEventListener('touchstart', (e) => {
       mousedown(e.touches[0]);
-    });
+    }, { passive: true });
     parent.addEventListener('touchmove', (e) => {
       mousemove(e.touches[0]);
-    });
+    }, { passive: true });
     parent.addEventListener('touchend', (e) => {
       mouseup(e.touches[0]);
-    });
+    }, { passive: true });
   });
 </script>
 

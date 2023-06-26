@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { fade } from 'svelte/transition';
   import { base } from '$app/paths';
 
@@ -98,7 +98,9 @@
   let container,
     packer,
     circles,
-    ready = false;
+    ready = false,
+    src = null,
+    alt = '';
   onMount(() => {
     let bounds = {
       width: container.offsetWidth,
@@ -145,49 +147,63 @@
 
       bounds = { width: container.offsetWidth, height: container.offsetHeight };
       packer.setBounds(bounds);
-      packer.setTarget({ x: bounds.width / 2, y: bounds.height / 2 });
+      if (active.ind === -1) {
+        packer.setTarget({ x: bounds.width / 2, y: bounds.height / 2 });
+      } else {
+        packer.setTarget({ x: bounds.width / 2, y: 0 });
+      }
     });
 
     ready = true;
   });
 
-  let active = new Array(projects.length).fill(false), prev = -1;
+  let active = { el: null, ind: -1 }, prev = -1;
 </script>
 
 <div bind:this={container} class="container" class:ready>
   {#each projects as p, i}
     <div
       class="item"
-      class:active={active[i]}
+      class:active={active.ind === i}
       class:faded={prev > -1 && i !== prev}
       on:click={(e) => {
-        if (active[i]) {
+        if (active.ind === i) {
           e.target.classList.remove('active');
           packer.setCircleRadius(circles[i], 50);
-          active[i] = false;
+          active = { el: null, ind: -1 };
 
-          container.style.backgroundImage = 'none';
+          src = null;
+          alt = '';
           prev = -1;
 
           let bounds = { width: container.offsetWidth, height: container.offsetHeight };
           packer.setTarget({ x: bounds.width / 2, y: bounds.height / 2 });
         } else {
+          if (active.ind > -1) {
+            active.el.classList.remove('active');
+            packer.setCircleRadius(circles[active.ind], 50);
+          }
+
           e.target.classList.add('active');
           packer.setCircleRadius(circles[i], 150);
-          active[i] = true;
+          active = { el: e.target, ind: i };
 
-          container.style.backgroundImage = `url(${p.img})`;
+          src = null;
+          alt = '';
+          setTimeout(() => {
+            src = p.img;
+            alt = p.name;
+          }, 250);
           prev = i;
 
-          let bounds = { width: container.offsetWidth, height: container.offsetHeight };
-          packer.setTarget({ x: bounds.width / 2, y: 0 });
+          packer.setTarget({ x: container.offsetWidth / 2, y: 0 });
         }
       }}
       on:keydown={(e) => {
         if (e.key === 'Enter') e.target.click();
       }}
     >
-      {#if !active[i]}
+      {#if active.ind !== i}
         <span
           in:fade={{delay: 300, duration: 200}}
           out:fade={{duration: 100}}
@@ -215,16 +231,17 @@
       {/if}
     </div>
   {/each}
+  {#if src}
+    <img
+      transition:fade={{duration: 200}}
+      class="img"
+      {src}
+      {alt}
+    />
+  {/if}
 </div>
 
 <style>
-  :global(body) {
-    background: initial;
-    background-color: var(--color-dark);
-    background-size: cover;
-    background-position: center;
-  }
-
   .container {
     width: 100vw;
     height: 100vh;
@@ -237,8 +254,8 @@
     overflow: hidden;
     opacity: 0;
     background-size: 20rem;
-    background-position: center;
     background-repeat: no-repeat;
+    background-position: center bottom;
   }
   .container.ready {
     opacity: 1;
@@ -264,10 +281,14 @@
     overflow: hidden;
     transform: translate(50vw, 50vh);
   }
+  .item.faded {
+    opacity: 0.1;
+  }
   .item:hover,
   :global(.item.active) {
     background: var(--color-light) !important;
     color: var(--color-dark) !important;
+    opacity: 1;
   }
   .item:hover span,
   .item:hover span small,
@@ -278,8 +299,14 @@
   :global(.item.active) {
     z-index: 999;
   }
-  .item.faded {
-    opacity: 0.1;
+
+  .img {
+    height: 30vh;
+    max-height: 30rem;
+    position: absolute;
+    left: 50%;
+    bottom: 4rem;
+    transform: translateX(-50%);
   }
 
   a {
