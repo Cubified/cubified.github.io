@@ -284,6 +284,7 @@
     cursor: pointer;
     box-sizing: border-box;
     padding: 2rem;
+    z-index: 1;
 
     display: flex;
     align-items: center;
@@ -318,6 +319,7 @@
     position: absolute;
     left: 50%;
     bottom: 0;
+    z-index: 0;
     transform: translateX(-50%);
     transition: opacity 0.2s;
   }
