@@ -202,7 +202,8 @@
   }
 
   let parent,
-    boxes = [];
+    boxes = [],
+    loaded = false;
   onMount(() => {
     let body;
     if (window.innerWidth <= 500) {
@@ -295,6 +296,10 @@
     parent.addEventListener('touchend', (e) => {
       mouseup(e.touches[0]);
     }, { passive: true });
+
+    const img = new Image();
+    img.addEventListener('load', () => { loaded = true; });
+    img.src = '/me.jpg';
   });
 </script>
 
@@ -359,7 +364,7 @@
       <a href="https://landing.fixnation.org">FixNation</a> as an Engineering Manager.
     </p>
   </div>
-  <div bind:this={boxes[2]} class="ball me" />
+  <div bind:this={boxes[2]} class="ball me" class:loaded />
   <div bind:this={boxes[3]} class="ball" />
   <div bind:this={boxes[4]} class="ball" />
 </main>
@@ -422,7 +427,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    transition: background 0.2s;
+    transition: background 0.2s, opacity 0.2s;
   }
   .ball:hover {
     background-color: var(--color-light);
@@ -434,6 +439,10 @@
     background-image: url(/me.jpg);
     background-size: cover;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+  }
+  .me.loaded {
+    opacity: 1;
   }
   .me:hover {
     background-color: unset !important;

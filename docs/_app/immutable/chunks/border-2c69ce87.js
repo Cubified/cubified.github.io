@@ -1,0 +1,1 @@
+import{S as l,i as o,s as i,k as c,l as h,m as d,h as a,n as _,b as m,B as s}from"./index-f2a81916.js";function p(r){let e;return{c(){e=c("div"),this.h()},l(t){e=h(t,"DIV",{class:!0}),d(e).forEach(a),this.h()},h(){_(e,"class","border svelte-1c2eotk")},m(t,n){m(t,e,n)},p:s,i:s,o:s,d(t){t&&a(e)}}}class f extends l{constructor(e){super(),o(this,e,null,p,i,{})}}export{f as B};

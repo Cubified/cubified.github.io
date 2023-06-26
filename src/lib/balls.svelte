@@ -98,7 +98,9 @@
   let container,
     packer,
     circles,
+    img,
     ready = false,
+    loaded = false,
     src = null,
     alt = '';
   onMount(() => {
@@ -154,6 +156,8 @@
       }
     });
 
+    img.addEventListener('load', () => { loaded = true; });
+
     ready = true;
   });
 
@@ -172,9 +176,12 @@
           packer.setCircleRadius(circles[i], 50);
           active = { el: null, ind: -1 };
 
-          src = null;
-          alt = '';
-          prev = -1;
+          loaded = false;
+          setTimeout(() => {
+            src = null;
+            alt = '';
+            prev = -1;
+          }, 250);
 
           let bounds = { width: container.offsetWidth, height: container.offsetHeight };
           packer.setTarget({ x: bounds.width / 2, y: bounds.height / 2 });
@@ -186,15 +193,21 @@
 
           e.target.classList.add('active');
           packer.setCircleRadius(circles[i], 150);
+          packer.dragStart(circles[i].id);
+          packer.drag(circles[i].id, { x: container.offsetWidth / 2, y: 0 });
+          packer.dragEnd(circles[i].id);
           active = { el: e.target, ind: i };
 
-          src = null;
-          alt = '';
+          loaded = false;
           setTimeout(() => {
-            src = p.img;
-            alt = p.name;
+            src = null;
+            alt = '';
+            setTimeout(() => {
+              src = p.img;
+              alt = p.name;
+            }, 250);
+            prev = i;
           }, 250);
-          prev = i;
 
           packer.setTarget({ x: container.offsetWidth / 2, y: 0 });
         }
@@ -231,14 +244,13 @@
       {/if}
     </div>
   {/each}
-  {#if src}
-    <img
-      transition:fade={{duration: 200}}
-      class="img"
-      {src}
-      {alt}
-    />
-  {/if}
+  <img
+    bind:this={img}
+    class="img"
+    style="opacity: {0 + loaded}"
+    {src}
+    {alt}
+  />
 </div>
 
 <style>
@@ -305,8 +317,9 @@
     max-height: 30rem;
     position: absolute;
     left: 50%;
-    bottom: 4rem;
+    bottom: 0;
     transform: translateX(-50%);
+    transition: opacity 0.2s;
   }
 
   a {
