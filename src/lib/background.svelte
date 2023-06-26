@@ -161,7 +161,8 @@ void main() {
       canv.style.width = max + 'px';
       canv.style.height = max + 'px';
 
-      const ratio = window.devicePixelRatio || 1;
+      // const ratio = window.devicePixelRatio || 1;
+      const ratio = 1;
       canv.width = max * ratio;
       canv.height = max * ratio;
 
@@ -172,15 +173,15 @@ void main() {
     resize();
 
     const buf = gl.createBuffer();
-    gl.bindBuffer(
-      gl.ARRAY_BUFFER, buf
-    );
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0]),
+      new Float32Array([
+        -1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0
+      ]),
       gl.STATIC_DRAW
     );
-  
+
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -214,7 +215,7 @@ void main() {
   canvas {
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     z-index: 0;

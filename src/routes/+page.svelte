@@ -41,9 +41,17 @@
   <h2>I write software.</h2>
   <br />
   <a href="/about">About</a>
-  <br />
-  <br />
+  &nbsp;/&nbsp;
   <a href="/projects">Projects</a>
+  <br />
+  <br />
+  <br />
+  <br />
+  <a href="/resume.pdf">Resume</a>
+  &nbsp;/&nbsp;
+  <a href="https://github.com/Cubified">GitHub</a>
+  &nbsp;/&nbsp;
+  <a href="https://linkedin.com/in/andrewlrussell">LinkedIn</a>
 </main>
 
 <Background />
@@ -68,6 +76,7 @@
     text-decoration: none;
     box-shadow: inset 0 -0.1em var(--color-light);
     padding: 0.2rem 0.25rem;
+    line-height: 1.5;
     transition: box-shadow 0.2s, color 0.2s, text-shadow 0.2s;
   }
   a:hover {

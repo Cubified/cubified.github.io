@@ -3,76 +3,50 @@
   import { base } from '$app/paths';
 
   import Border from '$lib/border.svelte';
-  import Background from '$lib/background.svelte';
 
   /*
    * VECTOR PRIMITIVE
    */
   class vec2 {
-    constructor(x, y){
+    constructor(x, y) {
       this.x = x;
       this.y = y;
     }
-    distance(p){
+    distance(p) {
       return Math.sqrt(
-        (p.x - this.x) * (p.x - this.x) +
-        (p.y - this.y) * (p.y - this.y)
+        (p.x - this.x) * (p.x - this.x) + (p.y - this.y) * (p.y - this.y)
       );
     }
-    copy(){
-      return new vec2(
-        this.x,
-        this.y
-      );
+    copy() {
+      return new vec2(this.x, this.y);
     }
-    length(){
+    length() {
       return this.distance(new vec2(0, 0));
     }
-    norm(){
+    norm() {
       let len = this.length();
-      return new vec2(
-        this.x / len,
-        this.y / len
-      );
+      return new vec2(this.x / len, this.y / len);
     }
-    add(p){
-      return new vec2(
-        this.x + p.x,
-        this.y + p.y
-      );
+    add(p) {
+      return new vec2(this.x + p.x, this.y + p.y);
     }
-    add_s(n){
-      return new vec2(
-        this.x + n,
-        this.y + n
-      );
+    add_s(n) {
+      return new vec2(this.x + n, this.y + n);
     }
-    sub(p){
-      return new vec2(
-        this.x - p.x,
-        this.y - p.y
-      );
+    sub(p) {
+      return new vec2(this.x - p.x, this.y - p.y);
     }
-    sub_s(n){
-      return new vec2(
-        this.x - n,
-        this.y - n
-      );
+    sub_s(n) {
+      return new vec2(this.x - n, this.y - n);
     }
-    mult(p){
-      return new vec2(
-        this.x * p.x,
-        this.y * p.y
-      );
+    mult(p) {
+      return new vec2(this.x * p.x, this.y * p.y);
     }
-    mult_s(n){
-      return new vec2(
-        n * this.x,
-        n * this.y
-      );
+    mult_s(n) {
+      return new vec2(n * this.x, n * this.y);
     }
-    dot(v){
-      return (this.x * v.x) + (this.y * v.y);
+    dot(v) {
+      return this.x * v.x + this.y * v.y;
     }
   }
 
@@ -83,12 +57,13 @@
     constructor(x, y, xo, yo) {
       super(x, y);
 
-      this.origin = new vec2(x-(xo ?? 0), y-(yo ?? 0));
+      this.origin = new vec2(x - (xo ?? 0), y - (yo ?? 0));
       this.velocity = new vec2(0, 0);
       this.acceleration = new vec2(0, 0);
       this.noUpdate = false;
     }
-    update(){ // Not to be called manually!
+    update() {
+      // Not to be called manually!
       if (this.noUpdate) return;
 
       this.x += this.velocity.x;
@@ -103,7 +78,7 @@
    * PHYSICS OBJECTS
    */
   class Spring {
-    constructor(a, b, props_arg){
+    constructor(a, b, props_arg) {
       this.points = [a, b];
       this.from = a;
       this.to = b;
@@ -112,26 +87,34 @@
         d0: props.d0 ?? a.distance(b),
         k: props.k ?? 0.001,
         mass: props.mass ?? 100,
-        damping: props.damping ?? 0.05
+        damping: props.damping ?? 0.03
       };
 
       this.first_update = true; // Fun little pop-in animation
     }
-    update(){
-      if(this.first_update){
+    update() {
+      if (this.first_update) {
         this.first_update = false;
-        this.from.x *= 1.1;
-        this.from.y *= 1.1;
+        this.from.x -= window.innerWidth / 2;
+        this.from.x *= 1.2;
+        this.from.x += window.innerWidth / 2;
+        this.from.y -= window.innerHeight / 2;
+        this.from.y *= 1.2;
+        this.from.y += window.innerHeight / 2;
       }
 
-      let Fnet = (this.props.k * (this.from.distance(this.to) - this.props.d0)),
+      let Fnet = this.props.k * (this.from.distance(this.to) - this.props.d0),
         vec = this.to.sub(this.from).mult_s(0.5);
 
       this.from.acceleration = vec.mult_s(Fnet / this.props.mass);
-      this.from.acceleration = this.from.acceleration.sub(this.from.velocity.mult_s(this.props.damping));
+      this.from.acceleration = this.from.acceleration.sub(
+        this.from.velocity.mult_s(this.props.damping)
+      );
 
       this.to.acceleration = vec.mult_s(-Fnet / this.props.mass);
-      this.to.acceleration = this.to.acceleration.sub(this.to.velocity.mult_s(this.props.damping));
+      this.to.acceleration = this.to.acceleration.sub(
+        this.to.velocity.mult_s(this.props.damping)
+      );
 
       this.from.update();
       this.to.update();
@@ -147,7 +130,9 @@
 
       this.springs = [];
       for (let i = 0; i < c.length; i++) {
-        this.springs.push(new Spring(this.points[c[i][0]], this.points[c[i][1]]));
+        this.springs.push(
+          new Spring(this.points[c[i][0]], this.points[c[i][1]])
+        );
       }
     }
     update() {
@@ -158,54 +143,57 @@
   }
 
   class SpringBody {
-    constructor(n, r, x, y){
+    constructor(n, r, x, y) {
       let arr = [];
-      for(let i=2*Math.PI;i>=0;i-=(2*Math.PI)/n){
-        arr.push(new Point(x + (r*Math.cos(i)), y + (r*Math.sin(i))));
+      for (let i = 2 * Math.PI; i >= 0; i -= (2 * Math.PI) / n) {
+        arr.push(new Point(x + r * Math.cos(i), y + r * Math.sin(i)));
       }
       this.points = arr;
 
       this.springs = [];
-      arr.forEach(p1 => {
-        arr.forEach(p2 => {
-          if(p1 !== p2){
+      arr.forEach((p1) => {
+        arr.forEach((p2) => {
+          if (p1 !== p2) {
             let hit = false;
-            this.springs.forEach(spr => {
-              if((spr.from === p1 && spr.to === p2) ||
-                 (spr.from === p2 && spr.to === p1)) hit = true;
+            this.springs.forEach((spr) => {
+              if (
+                (spr.from === p1 && spr.to === p2) ||
+                (spr.from === p2 && spr.to === p1)
+              )
+                hit = true;
             });
-            if(!hit) this.springs.push(new Spring(p1, p2));
+            if (!hit) this.springs.push(new Spring(p1, p2));
           }
         });
       });
     }
-    update(){
-      this.springs.forEach(s => {
+    update() {
+      this.springs.forEach((s) => {
         s.update();
       });
     }
   }
 
   class World {
-    constructor(fn){
+    constructor(fn) {
       this.objects = [];
       this.fn = fn;
 
       this.loop = this.loop.bind(this);
     }
-    get points(){
+    get points() {
       let out = [];
-      this.objects.forEach(obj => {
+      this.objects.forEach((obj) => {
         out.push(...obj.points);
       });
       return out;
     }
-    add(obj){
+    add(obj) {
       this.objects.push(obj);
     }
-    loop(){
+    loop() {
       requestAnimationFrame(this.loop);
-      this.objects.forEach(obj => {
+      this.objects.forEach((obj) => {
         obj.update();
       });
 
@@ -213,31 +201,48 @@
     }
   }
 
-  let parent, boxes = [];
+  let parent,
+    boxes = [];
   onMount(() => {
     let body;
     if (window.innerWidth <= 500) {
+      const x = window.innerWidth / 2;
       body = new Body([
-        [10, 10],
-        [10, 235],
-        [10, 510]
+        [x, 350],
+        [x, 100],
+        [x, 600],
       ], [
-        [0, 1], [1, 2], [0, 2]
-      ], 135, 250);
+        [1, 0],
+        [0, 2],
+      ]);
+
+      boxes[3].style.display =
+        boxes[4].style.display = 'none';
     } else {
-      body = new SpringBody(3, 250, window.innerWidth / 4, 250);
+      body = new SpringBody(
+        boxes.length,
+        250,
+        window.innerWidth / 2,
+        50 + window.innerHeight / 2
+      );
     }
+
     const w = new World(() => {
       for (let i = 0; i < boxes.length; i++) {
-        if (!boxes[i]) continue;
-        boxes[i].style.top = body.points[i].y + 'px';
-        boxes[i].style.left = body.points[i].x + 'px';
+        if (!boxes[i] || !body.points[i]) break;
+
+        boxes[i].style.top =
+          body.points[i].y - boxes[i].offsetHeight / 2 + 'px';
+        boxes[i].style.left =
+          body.points[i].x - boxes[i].offsetWidth / 2 + 'px';
       }
     });
     w.add(body);
     w.loop();
 
-    let mouse = null, start = null, zIndex = 1;
+    let mouse = null,
+      start = null,
+      zIndex = 1;
     const mousedown = (e) => {
       let tmp = e.target;
       let i = -1;
@@ -252,7 +257,10 @@
 
       if (i > -1) {
         mouse = w.points[i];
-        start = new vec2(e.pageX - tmp.offsetLeft, e.pageY - tmp.offsetTop);
+        start = new vec2(
+          e.pageX - tmp.offsetLeft - tmp.offsetWidth / 2,
+          e.pageY - tmp.offsetTop - tmp.offsetHeight / 2
+        );
         mousemove(e);
 
         tmp.style.zIndex = zIndex++;
@@ -265,7 +273,7 @@
         mouse.noUpdate = true;
       }
     };
-    const mouseup = (e) => {
+    const mouseup = () => {
       if (mouse) mouse.noUpdate = false;
       mouse = null;
       start = null;
@@ -276,7 +284,6 @@
     parent.addEventListener('mouseup', mouseup);
 
     parent.addEventListener('touchstart', (e) => {
-      e.preventDefault();
       mousedown(e.touches[0]);
     });
     parent.addEventListener('touchmove', (e) => {
@@ -320,52 +327,39 @@
 <Border />
 
 <main bind:this={parent}>
-  <div bind:this={boxes[0]} class="box">
+  <div bind:this={boxes[1]} class="box">
     <h1>Bio</h1>
     <p>
-    I am an undergraduate computer science student at UC San Diego, interested in graphics, embedded systems, and full-stack web development.
-    <br />
-    <br />
-    I have 7 years of self-taught programming experience working with C and JavaScript, and am also comfortable working with x86/ARM Assembly, Java, and GLSL.
+      I am an undergraduate computer science student at UC San Diego, interested
+      in graphics, embedded systems, and full-stack web development.
+      <br />
+      <br />
+      I have 7 years of self-taught programming experience working with C and JavaScript,
+      and am also comfortable working with x86/ARM Assembly, Java, and GLSL.
     </p>
   </div>
-  <div bind:this={boxes[1]} class="box">
+  <div bind:this={boxes[0]} class="box">
     <h1>Work</h1>
     <p>
-      Currently I am a software engineer intern at <a
-        href="http://trulioo.com">Trulioo</a
-      >, where I work on implementing proof-of-concept projects and
-      developing full-stack WordPress themes.
+      Currently I am a software engineer intern at <a href="http://trulioo.com"
+        >Trulioo</a
+      >, where I work on implementing proof-of-concept projects and developing
+      full-stack WordPress themes.
 
       <br />
       <br />
 
       I am also VP Technology of
-      <a href="https://tse.ucsd.edu">Triton Software Engineering</a> at
-      UCSD, and previously led 8 developers in implementing a landing
-      page for Los Angeles-based non-profit
+      <a href="https://tse.ucsd.edu">Triton Software Engineering</a> at UCSD,
+      and previously led 8 developers in implementing a landing page for Los
+      Angeles-based non-profit
       <a href="https://landing.fixnation.org">FixNation</a> as an Engineering Manager.
     </p>
   </div>
-  <div bind:this={boxes[2]} class="box">
-    <h1>Contact</h1>
-    <p>
-      <a class="contact" href="{base}/resume.pdf">
-        Resume
-      </a>
-      <br />
-      <a class="contact" href="https://github.com/Cubified">
-        GitHub
-      </a>
-      <br />
-      <a class="contact" href="https://linkedin.com/in/andrewlrussell">
-        LinkedIn
-      </a>
-    </p>
-  </div>
+  <div bind:this={boxes[2]} class="ball me" />
+  <div bind:this={boxes[3]} class="ball" />
+  <div bind:this={boxes[4]} class="ball" />
 </main>
-
-<Background />
 
 <style>
   main {
@@ -375,6 +369,7 @@
     top: 0;
     left: 0;
     z-index: 2;
+    overflow: hidden;
   }
 
   a {
@@ -405,12 +400,39 @@
     transform: scale(0.8);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
-  .box h1, .box p {
+  .box h1,
+  .box p {
     color: var(--color-dark);
     text-shadow: none;
     margin: 0;
   }
   .box h1 {
     margin-bottom: 0.25rem;
+  }
+
+  .ball {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 15rem;
+    background-color: #444;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: background 0.2s;
+  }
+  .ball:hover {
+    background-color: var(--color-light);
+  }
+  .me {
+    width: 15rem;
+    height: 15rem;
+    background-color: unset;
+    background-image: url(/me.jpg);
+    background-size: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  .me:hover {
+    background-color: unset !important;
   }
 </style>

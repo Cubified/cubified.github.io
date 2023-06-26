@@ -2,7 +2,6 @@
   import { base } from '$app/paths';
 
   import Border from '$lib/border.svelte';
-  import Background from '$lib/background.svelte';
   import Balls from '$lib/balls.svelte';
 </script>
 
@@ -36,5 +35,4 @@
 </svelte:head>
 
 <Border />
-<Background />
 <Balls />
