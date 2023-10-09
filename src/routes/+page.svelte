@@ -40,18 +40,19 @@
   <h1>Hi, I'm Andrew Russell.</h1>
   <h2>I write software.</h2>
   <br />
-  <a href="/about">About</a>
-  &nbsp;/&nbsp;
-  <a href="/projects">Projects</a>
+  <div>
+    <a href="/about">About</a>
+    &nbsp;/&nbsp;
+    <a href="/projects">Projects</a>
+  </div>
   <br />
-  <br />
-  <br />
-  <br />
-  <a href="/resume.pdf">Resume</a>
-  &nbsp;/&nbsp;
-  <a href="https://github.com/Cubified">GitHub</a>
-  &nbsp;/&nbsp;
-  <a href="https://linkedin.com/in/andrewlrussell">LinkedIn</a>
+  <div>
+    <a href="/resume.pdf">Resume</a>
+    &nbsp;/&nbsp;
+    <a href="https://github.com/Cubified">GitHub</a>
+    &nbsp;/&nbsp;
+    <a href="https://linkedin.com/in/andrewlrussell">LinkedIn</a>
+  </div>
 </main>
 
 <Background />
@@ -70,6 +71,11 @@
     left: 0;
     z-index: 2;
     text-shadow: 0 2px 0 var(--color-dark);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
   }
 
   a {
