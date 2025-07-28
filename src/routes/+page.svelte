@@ -29,7 +29,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta
     name="description"
-    content="A personal portfolio site for UC San Diego computer science student Andrew Russell."
+    content="A personal portfolio site for software engineer Andrew Russell."
   />
   <title>Andrew Russell</title>
 </svelte:head>
@@ -38,20 +38,24 @@
 
 <main>
   <h1>Hi, I'm Andrew Russell.</h1>
-  <h2>I write software.</h2>
+  <h2>Website under construction.</h2>
+  <!--
   <br />
   <div>
     <a href="/about">About</a>
     &nbsp;/&nbsp;
     <a href="/projects">Projects</a>
   </div>
+  -->
   <br />
   <div>
-    <a href="/resume.pdf">Resume</a>
-    &nbsp;/&nbsp;
     <a href="https://github.com/Cubified">GitHub</a>
     &nbsp;/&nbsp;
     <a href="https://linkedin.com/in/andrewlrussell">LinkedIn</a>
+    &nbsp;/&nbsp;
+    <a href="https://orcid.org/0009-0000-6263-5528">ORCID</a>
+    &nbsp;/&nbsp;
+    <a href="mailto:alrussell@ucsd.edu">Email</a>
   </div>
 </main>
 
