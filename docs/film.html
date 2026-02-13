@@ -1,0 +1,515 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Donate to Kennedy Langford's Home Supporting Children's Creative Futures</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+        <style>
+            @font-face {
+                font-family: proxima-nova;
+                src: url(/proxima_nova.woff2);
+            }
+            @font-face {
+                font-family: proxima-nova-bold;
+                src: url(/proxima_nova_bold.woff2);
+            }
+
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: black;
+            }
+            h6 {
+                margin-bottom: 0.5rem;
+            }
+            p.small {
+                font-size: 12pt;
+            }
+            * {
+                font-family: proxima-nova, -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            }
+
+            .bold {
+                font-family: proxima-nova-bold !important;
+            }
+            .med {
+                font-size: 13pt;
+            }
+            .small {
+                font-size: 10pt;
+            }
+
+            .loader {
+                width: 3rem;
+                height: 3rem;
+                border: 5px solid #FFF;
+                border-bottom-color: transparent;
+                border-radius: 50%;
+                display: inline-block;
+                box-sizing: border-box;
+                animation: rotation 1s linear infinite;
+            }
+
+            @keyframes rotation {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .hidden {
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+
+            .flex {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .flex.wide {
+                width: 100vw;
+            }
+            .flex > div {
+                width: 80vw;
+                max-width: 48rem;
+            }
+
+            .header-img {
+                width: 12rem;
+                aspect-ratio: 1 / 1;
+                margin: 2rem auto 0;
+                border-radius: 6rem;
+            }
+
+            .amount-buttons {
+                width: 100%;
+                display: flex;
+                align-items: space-between;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .amount-buttons .row {
+                width: 100%;
+                display: flex;
+                align-items: space-between;
+                gap: 0.5rem;
+            }
+            .amount-buttons button {
+                padding: 2rem;
+                font-family: proxima-nova-bold;
+                border-radius: 4px;
+                font-size: 12pt;
+                width: 100%;
+                border: none;
+                background: rgb(230, 233, 237);
+                color: black;
+            }
+            .amount-buttons button:first-child {
+                margin-left: 0;
+            }
+            .amount-buttons button:last-child {
+                margin-right: 0;
+            }
+            .amount-buttons button.selected {
+                color: white;
+                background: rgb(21, 71, 156);
+            }
+
+            .amount-manual {
+                width: 100%;
+                font-size: 18pt;
+                text-align: right;
+                border: 1px solid rgba(0, 0, 0, 0.09);
+                margin-top: 1rem;
+                font-weight: 500;
+            }
+
+            .payment-methods {
+                margin-top: 1.5rem;
+            }
+            .payment-methods .option {
+                width: 100%;
+                border: 1px solid rgba(0, 0, 0, 0.09);
+                border-bottom: none;
+                box-sizing: border-box;
+                padding: 1rem 2rem;
+            }
+            .payment-methods .option:first-child {
+                border-radius: 8px 8px 0 0;
+            }
+            .payment-methods .option:last-child {
+                border-radius: 0 0 8px 8px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+            }
+            .payment-methods .option .header {
+                width: 100%;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                cursor: pointer;
+            }
+            .payment-methods .option .header input[type="radio"] {
+                width: 2rem;
+                height: 2rem;
+                margin: 0 1rem 0 0;
+                cursor: pointer;
+            }
+            .payment-methods .option .header .method-img {
+                aspect-ratio: 1 / 1;
+                width: 4rem;
+                margin: 0 0.5rem 0 0;
+            }
+            .payment-methods .option .header p {
+                margin: 0;
+            }
+
+            .payment-methods .option .details {
+                width: 100%;
+                margin-top: 1rem;
+                display: flex;
+                align-items: center;
+            }
+            .payment-methods .option .details svg {
+                width: 4rem;
+                padding: 0 0.7rem;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                border-radius: 4px;
+                margin-right: 1rem;
+            }
+            .payment-methods .option .details p {
+                margin: 0;
+            }
+            .payment-methods .option .details .spacer {
+                flex: 1;
+            }
+            .payment-methods .option .details .different {
+                text-decoration: underline;
+                color: rgba(0, 0, 0, 0.6);
+                cursor: pointer;
+                font-size: 10pt;
+                text-align: right;
+            }
+            /*
+            .payment-methods .option .details input,
+            .payment-methods .option .details select {
+                width: 100%;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                padding: 1rem;
+            }
+            .payment-methods .option .details .name,
+            .payment-methods .option .details .card,
+            .payment-methods .option .details .zip {
+                display: flex;
+                gap: 1rem;
+            }
+            .payment-methods .option .details .card input:first-child {
+                width: 500%;
+            }
+            */
+
+            .donation-summary {
+                display: flex;
+                align-items: space-between;
+                width: 100%;
+                font-size: 12pt;
+            }
+            .donation-summary p:first-child {
+                flex: 1;
+            }
+
+            .donate-button {
+                width: 100%;
+                height: 80px;
+                border-radius: 8px;
+                background: #227F23;
+                color: #f3f3f3;
+                font-size: 16pt;
+                border: none;
+                cursor: pointer;
+                padding: 2rem 4rem;
+                opacity: 1;
+                position: relative;
+                transition: opacity 0.15s ease-out;
+            }
+            .donate-button:disabled:hover {
+                background: #427A43;
+            }
+            .donate-button .text {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+            }
+            .donate-button:disabled .text {
+                opacity: 0;
+                visibility: hidden;
+            }
+            .donate-button .loader {
+                position: absolute;
+                top: calc((80px - 3rem) / 2);
+                left: calc((100% - 3rem) / 2);
+                display: block;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+            }
+            .donate-button:disabled .loader {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                background: rgba(0, 0, 0, 0.2);
+                z-index: 999;
+                top: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+            }
+            .modal .box {
+                width: 48rem;
+                max-width: calc(100vw - 2rem);
+                height: 26rem;
+                background: #f3f3f3;
+                border-radius: 6px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.09);
+            }
+            .modal .box .header {
+                width: 100%;
+            }
+            .modal .box .header .close {
+                background: transparent;
+                border: none;
+                margin: 0;
+                padding: 0;
+                cursor: pointer;
+                float: right;
+                position: relative;
+                z-index: 999;
+            }
+            .modal .box .header .close svg {
+                background: transparent;
+                color: black;
+                border: none;
+                float: right;
+                padding: 2rem;
+                width: 3rem;
+                height: 3rem;
+            }
+            .modal .box .content {
+                width: 100%;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                top: -4rem;
+            }
+            .modal .box .content .icon {
+                width: 5rem;
+                height: 5rem;
+                fill: #C3110C;
+                margin-bottom: 0rem;
+            }
+            .modal .box .content p {
+                color: black;
+                margin-bottom: 1rem;
+            }
+            .modal .box .content button {
+                border-radius: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="flex wide">
+            <div>
+                <div class="flex">
+                    <img src="film.png" class="header-img" />
+                </div>
+
+                <h1>Support Children's Creative Futures</h1>
+                <!--
+                <p class="small">
+                </p>
+                -->
+
+                <h6>Choose an amount</h6>
+                <div class="amount-buttons">
+                    <div class="row">
+                        <button>$10</button>
+                        <button>$20</button>
+                    </div>
+                    <div class="row">
+                        <button>$50</button>
+                        <button>$100</button>
+                    </div>
+                </div>
+                <input class="amount-manual" value="$0.00" />
+                
+                <br />
+
+                <h6>Payment method</h6>
+                <div class="payment-methods">
+                    <div class="option">
+                        <div class="header">
+                            <input type="radio" name="method" />
+                            <svg class="method-img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="paypal"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.783 7.471h2.56c1.374 0 1.892.685 1.812 1.693-.132 1.661-1.152 2.58-2.506 2.58h-.683c-.185 0-.31.12-.36.449l-.294 1.904c-.019.124-.085.196-.184.205h-1.605c-.152 0-.205-.114-.166-.36l.98-6.11c.04-.244.176-.36.446-.36Z" fill="#009DE2"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.183 5.369h2.562c.722 0 1.578.023 2.15.52.383.332.584.861.537 1.429-.157 1.926-1.327 3.005-2.897 3.005h-1.263c-.216 0-.358.14-.419.52l-.352 2.209c-.023.143-.086.227-.202.238H8.721c-.175 0-.238-.132-.192-.418l1.137-7.084c.045-.284.203-.42.517-.42Z" fill="#113984"/><path fill-rule="evenodd" clip-rule="evenodd" d="m10.89 10.62.447-2.787c.04-.245.176-.362.446-.362h2.56c.424 0 .766.065 1.035.185-.258 1.714-1.384 2.667-2.859 2.667h-1.264c-.166 0-.29.084-.365.298Z" fill="#172C70"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.928 15.113h1.03c.345 0 .605.09.751.263.134.156.178.38.132.665-.103.65-.494.98-1.173.98h-.326c-.07 0-.13.05-.142.12l-.112.713a.143.143 0 0 1-.142.121h-.492a.086.086 0 0 1-.085-.099l.417-2.643a.143.143 0 0 1 .142-.12Zm.537 1.335c.273 0 .556 0 .612-.37.02-.13.004-.224-.05-.287-.09-.107-.266-.107-.452-.107h-.072a.086.086 0 0 0-.084.073l-.11.69h.156ZM9.545 16.066h.494c.052 0 .093.047.084.1l-.267 1.688a.143.143 0 0 1-.141.121H9.27a.086.086 0 0 1-.084-.1l.022-.137s-.244.283-.683.283c-.256 0-.471-.074-.622-.251-.164-.193-.23-.47-.184-.758.091-.58.557-.992 1.102-.992.238 0 .476.051.583.206l.034.05.022-.138a.086.086 0 0 1 .085-.072Zm-.75 1.432a.55.55 0 0 0 .556-.472.427.427 0 0 0-.084-.349.416.416 0 0 0-.329-.134.552.552 0 0 0-.553.475.42.42 0 0 0 .078.346c.073.088.188.134.331.134Z" fill="#283B82"/><path d="M12.667 16.066h-.496a.144.144 0 0 0-.119.063l-.684 1.007-.29-.968a.144.144 0 0 0-.137-.102h-.487c-.06 0-.1.058-.082.114l.546 1.602-.513.725c-.04.057 0 .136.07.136h.495a.143.143 0 0 0 .118-.061l1.65-2.381a.086.086 0 0 0-.071-.135" fill="#283B82"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.278 15.113h1.03c.345 0 .605.09.752.263.133.156.177.38.131.665-.103.65-.494.98-1.173.98h-.326c-.07 0-.13.05-.142.12l-.118.75a.1.1 0 0 1-.099.084h-.528a.086.086 0 0 1-.085-.099l.417-2.643a.143.143 0 0 1 .141-.12Zm.537 1.335c.274 0 .556 0 .613-.37.02-.13.004-.224-.05-.287-.091-.107-.267-.107-.453-.107h-.071a.086.086 0 0 0-.085.073l-.109.69h.155ZM16.895 16.066h.494c.053 0 .093.047.085.1l-.267 1.688a.143.143 0 0 1-.141.121h-.445a.086.086 0 0 1-.085-.1l.022-.137s-.243.283-.683.283c-.256 0-.47-.074-.621-.251-.164-.193-.231-.47-.184-.758.09-.58.556-.992 1.102-.992.237 0 .476.051.582.206l.035.05.022-.138a.086.086 0 0 1 .084-.072Zm-.751 1.432a.55.55 0 0 0 .557-.472.425.425 0 0 0-.084-.349.416.416 0 0 0-.329-.134.553.553 0 0 0-.553.475.42.42 0 0 0 .078.346c.073.088.188.134.331.134Z" fill="#469BDB"/><path d="m17.97 15.185-.422 2.691c-.009.052.032.1.084.1h.425c.071 0 .131-.052.142-.122l.417-2.642a.086.086 0 0 0-.085-.1h-.476a.086.086 0 0 0-.084.073" fill="#469BDB"/></svg>
+                            <p>PayPal</p>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="option">
+                        <div class="header">
+                            <input type="radio" name="method" />
+                            <svg class="method-img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="venmo"><path d="M17.605 5.369c.49.796.71 1.616.71 2.652 0 3.304-2.864 7.597-5.19 10.61h-5.31L5.684 6.093l4.65-.435 1.126 8.923c1.052-1.688 2.35-4.34 2.35-6.148 0-.99-.171-1.664-.44-2.22l4.234-.843Z" fill="#008CFF"/></svg>
+                            <p>Venmo</p>
+                        </div>
+                    </div>
+                    -->
+                    <!--
+                    <div class="option">
+                        <div class="header">
+                            <input type="radio" name="method" />
+                            <svg class="method-img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="ach"><path d="M18.828 10.48 19 9.91 12 5 5 9.91l.172.569a1.975 1.975 0 0 0 1.28 1.298v6.156H5.195V19h13.611v-1.067h-1.258v-6.156a1.975 1.975 0 0 0 1.281-1.298Zm-12.564-.152L12 6.306l5.735 4.022a.903.903 0 0 1-.795.48H7.06a.903.903 0 0 1-.796-.48Zm7.348 3.147v4.458h-3.224v-4.458c0-.882.723-1.6 1.612-1.6.889 0 1.612.718 1.612 1.6Zm-6.085-1.6h2.337c-.34.447-.55.998-.55 1.6v4.458H7.527v-6.058Zm7.16 6.058v-4.458c0-.602-.21-1.153-.551-1.6h2.337v6.058h-1.787Zm-3.93-7.992-.76-.754a2.851 2.851 0 0 1 4.006 0l-.76.754a1.77 1.77 0 0 0-2.486 0Z" fill="#252525"/></svg>
+                            <p>Bank transfer</p>
+                        </div>
+                    </div>
+                    -->
+                    <div class="option">
+                        <div class="header">
+                            <input type="radio" name="method" checked />
+                            <svg class="method-img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="card"><path d="M17.25 6.188H6.75A2.065 2.065 0 0 0 4.687 8.25v7.5c0 1.137.926 2.063 2.063 2.063h10.5a2.065 2.065 0 0 0 2.063-2.063v-7.5a2.065 2.065 0 0 0-2.063-2.063ZM6.75 7.313h10.5c.517 0 .938.42.938.937v.938H5.813V8.25c0-.517.42-.938.937-.938Zm10.5 9.375H6.75a.938.938 0 0 1-.938-.938v-5.438h12.375v5.438c0 .517-.42.938-.937.938Zm-9.75-3H12v1.124H7.5v-1.124Zm9.75.562a.792.792 0 0 1-1.5.367.792.792 0 0 1-1.5-.367.792.792 0 0 1 1.5-.367.792.792 0 0 1 1.5.367Z" fill="#252525"/></svg>
+                            <p>Credit or debit</p>
+                        </div>
+                        <div class="details">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="visa"><path d="M10.744 14.884H9.209l.96-5.934h1.534l-.96 5.934ZM16.306 9.095a3.782 3.782 0 0 0-1.376-.253c-1.515 0-2.582.808-2.589 1.964-.013.852.764 1.325 1.345 1.61.593.29.795.48.795.738-.006.398-.48.581-.921.581-.613 0-.941-.094-1.44-.316l-.202-.094-.215 1.332c.36.164 1.023.31 1.712.316 1.61 0 2.658-.796 2.67-2.027.006-.675-.404-1.193-1.288-1.616-.537-.272-.865-.455-.865-.733.006-.252.278-.51.884-.51.498-.014.865.106 1.143.226l.139.063.208-1.281Z" fill="#00579F"/><path fill-rule="evenodd" clip-rule="evenodd" d="M19.053 8.95h1.187l1.238 5.934h-1.421l-.183-.89h-1.97l-.323.89h-1.61l2.28-5.442c.158-.385.436-.492.802-.492Zm-.095 2.171s-.486 1.32-.613 1.66h1.276c-.063-.296-.354-1.716-.354-1.716l-.107-.512c-.045.132-.11.313-.155.435l-.047.133Z" fill="#00579F"/><path d="m7.89 8.95-1.503 4.046-.164-.82c-.278-.947-1.15-1.976-2.122-2.488l1.377 5.19H7.1L9.512 8.95H7.89Z" fill="#00579F"/><path d="M4.992 8.95h-2.47l-.024.12c1.925.492 3.2 1.68 3.725 3.106l-.537-2.727c-.088-.38-.36-.487-.694-.5Z" fill="#FAA61A"/></svg>
+                            <p class="main-text">Ending in 3402</p>
+                            <span class="spacer">&nbsp;</span>
+                            <p class="different">Edit card</p>
+                            <!--
+                            <input placeholder="Email address" type="email" />
+                            <div class="name">
+                                <input placeholder="First name" />
+                                <input placeholder="Last name" />
+                            </div>
+                            <div class="card">
+                                <input placeholder="Card number" name="cardnumber" autocomplete="cc-number" />
+                                <input placeholder="MM/YY" name="exp" autocomplete="cc-exp" />
+                                <input placeholder="CVV" autocomplete="cc-csc" />
+                            </div>
+                            <input placeholder="Name on card" name="name" autocomplete="cc-name" />
+                            <div class="zip">
+                                <select placeholder="Country">
+                                    <option>United States</option>
+                                </select>
+                                <input placeholder="Postal code" type="number" />
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <h6>Your donation</h6>
+                <div class="donation-summary">
+                    <p>Total due today</p>
+                    <p id="amount">$0.00</p>
+                </div>
+                <button class="donate-button">
+                    <span class="text bold">Donate</span>
+                    <span class="loader"></span>
+                </button>
+
+                <div class="modal hidden">
+                    <div>
+                        <div class="box">
+                            <div class="header">
+                                <button class="close">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z"/></svg>
+                                </button>
+                            </div>
+                            <div class="content">
+                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM320 384C302.3 384 288 398.3 288 416C288 433.7 302.3 448 320 448C337.7 448 352 433.7 352 416C352 398.3 337.7 384 320 384zM320 192C301.8 192 287.3 207.5 288.6 225.7L296 329.7C296.9 342.3 307.4 352 319.9 352C332.5 352 342.9 342.3 343.8 329.7L351.2 225.7C352.5 207.5 338.1 192 319.8 192z"/></svg>
+                                <h3>Payment Declined</h3>
+                                <p>
+                                    <span class="bold med">Insufficient balance</span>
+                                    <br>
+                                    <span class="small">
+                                        (Error code E_INSUFF_BAL)
+                                    </span>
+                                </p>
+                                <!-- <button class="try-again">Try Again</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <script>
+            let selectedButton;
+            const amtButtons = document.querySelectorAll('.amount-buttons button');
+            const amtSummary = document.getElementById('amount');
+            const amtManual = document.querySelector('.amount-manual');
+            [].forEach.call(amtButtons, (e) => {
+                e.addEventListener('click', () => {
+                    if (selectedButton) selectedButton.classList.remove('selected');
+                    if (selectedButton !== e) {
+                        e.classList.add('selected');
+                        selectedButton = e;
+                        amtSummary.innerText = e.innerText + '.00';
+                        amtManual.value = e.innerText + '.00';
+                    }
+                });
+            });
+
+            let modalOpen = false;
+            const modal = document.querySelector('.modal');
+            const donateButton = document.querySelector('.donate-button');
+            const closeButton = modal.querySelector('button.close');
+            const tryAgainButton = modal.querySelector('button.try-again');
+            donateButton.addEventListener('click', () => {
+                modalOpen = !modalOpen;
+                if (modalOpen) {
+                    donateButton.disabled = true;
+                    setTimeout(() => {
+                        modal.classList.remove('hidden');
+                        donateButton.disabled = false;
+                    }, 500);
+                } else {
+                    modal.classList.add('hidden');
+                }
+            });
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modalOpen = false;
+                    modal.classList.add('hidden');
+                }
+            });
+            closeButton.addEventListener('click', () => {
+                modalOpen = false;
+                modal.classList.add('hidden');
+            });
+            tryAgainButton.addEventListener('click', () => {
+                modalOpen = false;
+                modal.classList.add('hidden');
+            });
+        </script>
+    </body>
+</html>
