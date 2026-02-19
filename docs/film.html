@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Donate to Kennedy Langford's Home Supporting Children's Creative Futures</title>
+        <title>Support Children's Creative Futures</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
         <style>
@@ -84,6 +84,13 @@
                 aspect-ratio: 1 / 1;
                 margin: 2rem auto 0;
                 border-radius: 6rem;
+            }
+
+            /* Hack to fix wrapping */
+            @media only screen and (max-width: 390px) {
+                .title {
+                    min-width: 90vw;
+                }
             }
 
             .amount-buttons {
@@ -341,7 +348,7 @@
                     <img src="film.png" class="header-img" />
                 </div>
 
-                <h1>Support Children's Creative Futures</h1>
+                <h1 class="title">Support Children's Creative Futures</h1>
                 <!--
                 <p class="small">
                 </p>
