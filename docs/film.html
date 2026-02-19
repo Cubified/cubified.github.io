@@ -96,7 +96,8 @@
             .amount-buttons .row {
                 width: 100%;
                 display: flex;
-                align-items: space-between;
+                align-items: center;
+                justify-content: space-between;
                 gap: 0.5rem;
             }
             .amount-buttons button {
@@ -351,12 +352,16 @@
                     <div class="row">
                         <button>$10</button>
                         <button>$20</button>
+                    </div>
+                    <div class="row">
                         <button>$50</button>
                         <button>$100</button>
                     </div>
                     <div class="row">
                         <button>$50</button>
                         <button>$100</button>
+                    </div>
+                    <div class="row">
                         <button>$5,000</button>
                         <button>$10,000</button>
                     </div>
@@ -487,7 +492,6 @@
             const modal = document.querySelector('.modal');
             const donateButton = document.querySelector('.donate-button');
             const closeButton = modal.querySelector('button.close');
-            const tryAgainButton = modal.querySelector('button.try-again');
             donateButton.addEventListener('click', () => {
                 modalOpen = !modalOpen;
                 if (modalOpen) {
@@ -507,10 +511,6 @@
                 }
             });
             closeButton.addEventListener('click', () => {
-                modalOpen = false;
-                modal.classList.add('hidden');
-            });
-            tryAgainButton.addEventListener('click', () => {
                 modalOpen = false;
                 modal.classList.add('hidden');
             });
